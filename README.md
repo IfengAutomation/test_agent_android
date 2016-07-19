@@ -1,2 +1,2 @@
-# test_engine_android
+# Test Agent for Android
 Android device test engine for uitester
