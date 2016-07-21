@@ -22,7 +22,6 @@ public class Agent {
     public static final String ARG_PORT = "port";
     public static final String ARG_DEVICE_ID = "id";
 
-    private DriverManager driverManager;
     private RpcClient rpcClient;
 
     private String host;
@@ -39,6 +38,8 @@ public class Agent {
 
     @Test
     public void start(){
-        //TODO start rpcClient
+        //start RPC Client
+        rpcClient = new RpcClient(new RPCRequestHandler());
+        rpcClient.startAndBlock(host,port,id);
     }
 }
