@@ -11,7 +11,9 @@ public class RpcClient {
         this.requestHandler = requestHandler;
     }
 
-    public void startAndBlock(String host, int port){
+    public void startAndBlock(String host, int port, String deviceId){
         //TODO start json-rpc client and set request handler
+        //TODO In request handler: send register request when connected to server
+        //TODO In request handler: handle request and send response to server
     }
 }

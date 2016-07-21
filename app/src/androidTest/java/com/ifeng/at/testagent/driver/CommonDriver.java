@@ -6,7 +6,4 @@ package com.ifeng.at.testagent.driver;
  */
 public class CommonDriver {
 
-    public boolean clickOnText(){
-        return false;
-    }
 }
