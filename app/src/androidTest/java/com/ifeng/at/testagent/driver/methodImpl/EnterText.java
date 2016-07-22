@@ -26,9 +26,9 @@ public class EnterText implements MethodExecute {
             return response;
         }
         //TODO 根据key 获取Value
-//        EditText editText = varCache.get(request.);
-//
-//        solo.enterText(editText, request.getArgs()[1]);
+        EditText editText = (EditText) varCache.get(request.getArgs()[0]);
+
+        solo.enterText(editText, request.getArgs()[1]);
 
         response.setEntity(null);
         response.setResult(1);

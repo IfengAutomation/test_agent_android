@@ -31,6 +31,10 @@ public class GetView implements MethodExecute{
         }
 
         View view = solo.getView(request.getArgs()[0]);
+        if (request.getVar() != null){
+            varCache.put(request.getVar(), view);
+        }
+
         entity.put("v", view);
 
         response.setError(null);

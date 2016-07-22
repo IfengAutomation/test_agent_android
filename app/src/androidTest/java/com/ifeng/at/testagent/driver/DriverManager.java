@@ -38,11 +38,6 @@ public class DriverManager extends ActivityTestCase{
         MethodExecute method = methodMap.get(request.getMethod());   //获取MethodExecute对象
         Response response = method.execute(request, solo, varCache);    //执行method
 
-//        //判断是否需要存储var
-//        if (request.getVar_name() != null && response.getEntity() != null){
-//            varCache.put(request.getVar_name(), response.getEntity().get("v"));
-//        }
-
         return response;
 
     }
