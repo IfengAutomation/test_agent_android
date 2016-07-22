@@ -1,5 +1,6 @@
 package com.ifeng.at.testagent.driver;
 
+import android.support.test.InstrumentationRegistry;
 import android.test.ActivityTestCase;
 
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
@@ -22,21 +23,30 @@ public class DriverManager extends ActivityTestCase{
     private Map<String, MethodExecute> methodMap = new HashMap<>();
     private Map<String, Object> varCache = new HashMap<>();
 
+    public DriverManager(){
+        solo = new Solo(InstrumentationRegistry.getInstrumentation());
+        methodMap = registerMethodMap();
+    }
+
     //TODO reflection solo
     public void call(Object instance, String method, String...args)  {
 
     }
 
     public Response soloCall(Request request){
-
-        if (solo == null){
-            solo = new Solo(getInstrumentation(),getActivity());
-        }
-
-        methodMap = registerMethodMap();
-
+        Response response = null;
         MethodExecute method = methodMap.get(request.getMethod());   //获取MethodExecute对象
-        Response response = method.execute(request, solo, varCache);    //执行method
+
+        //method为空处理
+        if (method != null){
+            response = method.execute(request, solo, varCache);    //执行method
+        }else{
+            response = new Response();
+            response.setId(request.getId());
+            response.setVersion(request.getVersion());
+            response.setResult(0);
+            response.setError("There are no method:" + request.getMethod());
+        }
 
         return response;
 
