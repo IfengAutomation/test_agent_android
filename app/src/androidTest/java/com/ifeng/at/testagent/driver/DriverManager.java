@@ -9,11 +9,11 @@ import java.util.Objects;
  */
 public class DriverManager {
     //TODO reflection solo
-    public void call(Object instance, String method, List<Object> args){
+    public void call(Object instance, String method, String[] args){
 
     }
 
-    public void soloCall(String method, List<Object> args){
+    public void soloCall(String method, String[] args){
 
     }
 }
