@@ -18,10 +18,8 @@ public class RPCRequestHandler implements RequestHandler{
 
     @Override
     public Response handle(Request request) {
-
         //TODO handle request
         Response response = driverManager.soloCall(request);
-
         return response;
     }
 }

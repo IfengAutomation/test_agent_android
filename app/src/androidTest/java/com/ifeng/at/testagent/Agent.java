@@ -3,6 +3,7 @@ package com.ifeng.at.testagent;
 import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.ActivityTestCase;
 
 import com.ifeng.at.testagent.driver.CommonDriver;
 import com.ifeng.at.testagent.driver.DriverManager;
@@ -21,9 +22,7 @@ public class Agent {
     public static final String ARG_HOST = "host";
     public static final String ARG_PORT = "port";
     public static final String ARG_DEVICE_ID = "id";
-
     private RpcClient rpcClient;
-
     private String host;
     private int port;
     private String id;
@@ -42,4 +41,6 @@ public class Agent {
         rpcClient = new RpcClient(new RPCRequestHandler());
         rpcClient.startAndBlock(host,port,id);
     }
+
+
 }
