@@ -1,7 +1,6 @@
 package com.ifeng.at.testagent.driver;
 
 import android.support.test.InstrumentationRegistry;
-import android.test.ActivityTestCase;
 
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
@@ -18,7 +17,7 @@ import java.util.Map;
  * Created by zhaoye on 16/7/19.
  *
  */
-public class DriverManager extends ActivityTestCase{
+public class DriverManager{
     private Solo solo;
     private Map<String, MethodExecute> methodMap = new HashMap<>();
     private Map<String, Object> varCache = new HashMap<>();
@@ -26,11 +25,6 @@ public class DriverManager extends ActivityTestCase{
     public DriverManager(){
         solo = new Solo(InstrumentationRegistry.getInstrumentation());
         methodMap = registerMethodMap();
-    }
-
-    //TODO reflection solo
-    public void call(Object instance, String method, String...args)  {
-
     }
 
     public Response soloCall(Request request){
