@@ -4,7 +4,9 @@ import android.support.test.InstrumentationRegistry;
 
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
+import com.ifeng.at.testagent.driver.methodImpl.FinishActivity;
 import com.ifeng.at.testagent.driver.methodImpl.GetView;
+import com.ifeng.at.testagent.driver.methodImpl.StartMainActivity;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
@@ -58,6 +60,12 @@ public class DriverManager{
 
         WaitForText waitForText = new WaitForText();
         methodMap.put(waitForText.getMethodName(),waitForText);
+
+        StartMainActivity startMainActivity = new StartMainActivity();
+        methodMap.put(startMainActivity.getMethodName(), startMainActivity);
+
+        FinishActivity finishActivity = new FinishActivity();
+        methodMap.put(finishActivity.getMethodName(), finishActivity);
 
         return methodMap;
     }
