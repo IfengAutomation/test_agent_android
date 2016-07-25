@@ -21,7 +21,6 @@ public class ClickOnText implements MethodExecute {
         if (request.getArgs().length != 1){
             response.setResult(0);
             response.setError("Wrong number of args,need 2.");
-            response.setEntity(null);
             return  response;
         }
 

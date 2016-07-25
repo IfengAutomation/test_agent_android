@@ -1,6 +1,6 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
-import android.widget.EditText;
+import android.util.Log;
 
 import com.ifeng.at.testagent.driver.MethodExecute;
 import com.ifeng.at.testagent.rpc.Request;
@@ -10,32 +10,35 @@ import com.robotium.solo.Solo;
 import java.util.Map;
 
 /**
- * Created by lr on 2016/7/22.
+ * Created by lr on 2016/7/25.
  */
-public class EnterText implements MethodExecute {
+public class FinishActivity  implements MethodExecute{
     @Override
     public Response execute(Request request, Solo solo, Map varCache) {
         Response response = new Response();
         response.setId(request.getId());
         response.setVersion(request.getVersion());
 
-        if (request.getArgs().length != 2){
+        if (request.getArgs().length != 0){
             response.setResult(0);
-            response.setError("Wrong number of args,need 2.");
-            return response;
+            response.setError("Wrong number of args,need 0.");
+            return  response;
         }
-        //TODO 根据key 获取Value
-        EditText editText = (EditText) varCache.get(request.getArgs()[0]);
 
-        solo.enterText(editText, request.getArgs()[1]);
+        if (solo != null){
+            solo.finishOpenedActivities();
+        }
+        if (varCache != null){
+            Log.d("finish", "clear varCache");
+            varCache.clear();
+        }
 
         response.setResult(1);
-
         return response;
     }
 
     @Override
     public String getMethodName() {
-        return "enterText";
+        return "finishActivity";
     }
 }

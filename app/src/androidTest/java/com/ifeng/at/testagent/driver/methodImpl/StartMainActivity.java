@@ -1,37 +1,38 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
-import android.view.View;
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 
 import com.ifeng.at.testagent.driver.MethodExecute;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
 import com.robotium.solo.Solo;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lr on 2016/7/22.
+ * Created by lr on 2016/7/25.
  */
-public class GetView implements MethodExecute{
+public class StartMainActivity implements MethodExecute {
 
     @Override
     public Response execute(Request request, Solo solo, Map varCache) {
-
         Response response = new Response();
-
         response.setId(request.getId());
         response.setVersion(request.getVersion());
+
         if (request.getArgs().length != 1){
             response.setResult(0);
-            response.setError("Wrong number of params, need one.");
-            return response;
+            response.setError("Wrong number of args,need 1.");
+            return  response;
         }
 
-        View view = solo.getView(request.getArgs()[0]);
-        if (request.getVar() != null){
-            varCache.put(request.getVar(), view);
-        }
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName(instrumentation.getTargetContext(),request.getArgs()[0]);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        instrumentation.startActivitySync(intent);
 
         response.setResult(1);
 
@@ -40,6 +41,6 @@ public class GetView implements MethodExecute{
 
     @Override
     public String getMethodName() {
-        return "getView";
+        return "startMainActivity";
     }
 }
