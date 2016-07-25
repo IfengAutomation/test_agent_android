@@ -68,7 +68,7 @@ public class RpcClient {
      * @return
      */
     public Response registerHandle(Request registerRequest) throws IOException {
-        String registerJsonStr = encode(gson.toJson(registerRequest)+"\n") + "\n";
+        String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
         Log.i(TAG,registerJsonStr);
         writer.write(registerJsonStr);
         writer.flush();
