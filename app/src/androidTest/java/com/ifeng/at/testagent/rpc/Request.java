@@ -19,11 +19,12 @@ public class Request {
 
     }
 
-    public Request(int id, int version, String method, String[] args) {
+    public Request(int id, int version, String method, String[] args,String var) {
         this.id = id;
         this.version = version;
         this.method = method;
         this.args = args;
+        this.var =  var;
     }
 
     public int getId() {
