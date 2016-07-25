@@ -12,7 +12,7 @@ public class Response {
     private int id;
     private int version;
     private int result;
-    private String error;
+    private String error = "";
     private Map<String,Object> entity = new HashMap<>();
 
     public int getId() {

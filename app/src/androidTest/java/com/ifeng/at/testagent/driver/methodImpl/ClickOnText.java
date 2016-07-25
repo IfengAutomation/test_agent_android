@@ -27,9 +27,7 @@ public class ClickOnText implements MethodExecute {
 
         solo.clickOnText(request.getArgs()[0]);
 
-        response.setEntity(null);
         response.setResult(1);
-        response.setError("");
 
         return response;
     }

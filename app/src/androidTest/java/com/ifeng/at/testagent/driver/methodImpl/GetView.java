@@ -19,7 +19,6 @@ public class GetView implements MethodExecute{
     public Response execute(Request request, Solo solo, Map varCache) {
 
         Response response = new Response();
-        Map entity = new HashMap();
 
         response.setId(request.getId());
         response.setVersion(request.getVersion());
@@ -35,8 +34,6 @@ public class GetView implements MethodExecute{
             varCache.put(request.getVar(), view);
         }
 
-        response.setError(null);
-        response.setEntity(null);
         response.setResult(1);
 
         return response;

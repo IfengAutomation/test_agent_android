@@ -30,9 +30,7 @@ public class EnterText implements MethodExecute {
 
         solo.enterText(editText, request.getArgs()[1]);
 
-        response.setEntity(null);
         response.setResult(1);
-        response.setError("");
 
         return response;
     }
