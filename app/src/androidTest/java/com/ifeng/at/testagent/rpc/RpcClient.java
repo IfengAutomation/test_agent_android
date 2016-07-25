@@ -23,6 +23,7 @@ public class RpcClient {
     public Writer writer;
     public BufferedReader buf;
 
+
     public RpcClient(RequestHandler requestHandler) {
         this.requestHandler = requestHandler;
     }
@@ -49,7 +50,7 @@ public class RpcClient {
      */
     public boolean registerRequest(String deviceId) throws IOException {
         String[] args = {deviceId};
-        Request registerRequest = new Request(1, version, "register", args);
+        Request registerRequest = new Request(1, version, "register", args,"%");
         Response registerResponse = registerHandle(registerRequest);//手机注册
         if (registerResponse.getResult() == 1 && registerResponse.getId() == registerRequest.getId()) {
             Log.i(TAG, "注册成功");
@@ -67,7 +68,7 @@ public class RpcClient {
      * @return
      */
     public Response registerHandle(Request registerRequest) throws IOException {
-        String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
+        String registerJsonStr = encode(gson.toJson(registerRequest)+"\n") + "\n";
         Log.i(TAG,registerJsonStr);
         writer.write(registerJsonStr);
         writer.flush();
@@ -90,8 +91,8 @@ public class RpcClient {
                     Log.i(TAG, requestBuffer.toString());
                     Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
                     Response response = requestHandler.handle(request);
-                    Log.i(TAG,decode(gson.toJson(response)));
-                    String responseJson = encode(gson.toJson(response))+"\n";
+                    Log.i(TAG,gson.toJson(response));
+                    String responseJson = encode(gson.toJson(response));
                     writer.write(responseJson);
                     writer.flush();
             }
