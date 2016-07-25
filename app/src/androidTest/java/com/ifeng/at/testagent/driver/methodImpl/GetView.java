@@ -35,10 +35,8 @@ public class GetView implements MethodExecute{
             varCache.put(request.getVar(), view);
         }
 
-        entity.put("v", view);
-
         response.setError(null);
-        response.setEntity(entity);
+        response.setEntity(null);
         response.setResult(1);
 
         return response;
