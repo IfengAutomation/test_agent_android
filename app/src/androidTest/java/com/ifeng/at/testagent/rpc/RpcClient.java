@@ -8,8 +8,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhaoye on 16/7/19.
@@ -18,27 +22,30 @@ public class RpcClient {
     private RequestHandler requestHandler;
     private Socket clientSocket;
     private int version = 1;
-    public String TAG = "RpcClient";
-    public Gson gson = new Gson();
-    public Writer writer;
-    public BufferedReader buf;
+    private int successResult = 1;
+    private int defalutResult = 0;
+    private String TAG = "RpcClient ";
+    private Gson gson = new Gson();
+    private Writer writer;
+    private BufferedReader buf;
 
 
     public RpcClient(RequestHandler requestHandler) {
         this.requestHandler = requestHandler;
     }
 
-    public void startAndBlock(String host, int port, String deviceId) {
+
+    public void startAndBlock(String host, int port, String deviceId)  {
         try {
             clientSocket = new Socket(host, port);        //绑定server
             buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
             writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
-            boolean registerSuc = registerRequest(deviceId);//手机注册  TODO 修改变量名称
-            if (registerSuc) {
+            if (registerSuccess) {
                 listenToServer();//监听服务器发送请求
             }
-        } catch (IOException e) { //TODO 将异常分类抛出 I自己处理 II无法处理-抛 Juinit框架
-            Log.e(TAG, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"socket 连接出错\n"+e.getMessage());
         }
     }
 
@@ -49,14 +56,13 @@ public class RpcClient {
      * @return
      */
     private boolean registerRequest(String deviceId) throws IOException {
-        String[] args = {deviceId};
-        Request registerRequest = new Request(1, version, "register", args,"");
+        Request registerRequest = new Request(1, version, "register", "", deviceId);
         Response registerResponse = registerHandle(registerRequest);//手机注册
-        if (registerResponse.getResult() == 1 && registerResponse.getId() == registerRequest.getId()) {//todo 1
+        if (registerResponse.getResult() == successResult && registerResponse.getId() == registerRequest.getId()) {
             Log.i(TAG, "注册成功");
             return true;
         } else {
-            Log.i(TAG, "注册失败");//TODO 添加容错处理
+            Log.i(TAG, "注册失败");
             return false;
         }
     }
@@ -67,9 +73,9 @@ public class RpcClient {
      * @param registerRequest
      * @return
      */
-    public Response registerHandle(Request registerRequest) throws IOException {//todo  方法private
+    private Response registerHandle(Request registerRequest) throws IOException {
         String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
-        Log.i(TAG,registerJsonStr);//TODO 删除无用日志 分级别 日志信息详细
+        Log.i(TAG, "register response message :"+registerJsonStr);
         writer.write(registerJsonStr);
         writer.flush();
         String registerResponseStr = buf.readLine();
@@ -83,32 +89,49 @@ public class RpcClient {
      * @throws IOException
      */
     public void listenToServer() throws IOException {
-        //BufferedReader buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
         StringBuffer requestBuffer = new StringBuffer();
         requestBuffer.append(buf.readLine());
         while (true) {
-                if(!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {//TODO 使用特殊字符串 添加说明 如 null
-                    Log.i(TAG, requestBuffer.toString());
-                    Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
-                    Response response = requestHandler.handle(request);//TODO 调用封装接口 做异常处理 设置出错 response
-                    Log.i(TAG,decode(gson.toJson(response)));
-                    String responseJson = encode(gson.toJson(response))+"\n";
-                    writer.write(responseJson);
-                    writer.flush();
+            if (!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {//server 无数据请求时,requestBuffer为"null"
+                Log.i(TAG, "keyword request :"+requestBuffer.toString());
+                Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
+                Response response = null;
+                try {
+                    response = requestHandler.handle(request);
+                    response.setId(request.getId());
+                    response.setVersion(version);
+                } catch (Throwable e) {
+                    response = getErrorResponse(request, e);
+                }
+                Log.i(TAG, "keyword decode response :"+decode(gson.toJson(response)));
+                String responseJson = encode(gson.toJson(response)) + "\n";
+                writer.write(responseJson);
+                writer.flush();
             }
             requestBuffer.delete(0, requestBuffer.length());
             requestBuffer.append(buf.readLine());
         }
     }
 
+    private Response getErrorResponse(Request request, Throwable e) {
+        Response response;StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        e.printStackTrace(printWriter);
+        Map<String, Object> entity = new HashMap<>();
+        entity.put("type",e.getClass().getName());
+        entity.put("detail message",stringWriter.toString());
+        response = new  Response(request.getId(),  version, defalutResult,"未知错误-请联系管理员", entity);
+        return response;
+    }
 
-    public String decode(String srcStr) {
+
+    private String decode(String srcStr) {
         srcStr = srcStr.replace("%e", "%");
         srcStr = srcStr.replace("%n", "\n");
         return srcStr;
     }
 
-    public String encode(String srcStr) {
+    private String encode(String srcStr) {
         srcStr = srcStr.replace("%", "%e");
         srcStr = srcStr.replace("\n", "%n");
         return srcStr;

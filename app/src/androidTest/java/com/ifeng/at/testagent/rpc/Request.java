@@ -18,12 +18,12 @@ public class Request {
 
     }
 
-    public Request(int id, int version, String method, String[] args,String var) {//todo 数组放到最后 string...
+    public Request(int id, int version, String method, String var,String... args) {
         this.id = id;
         this.version = version;
         this.method = method;
-        this.args = args;
         this.var =  var;
+        this.args = args;
     }
 
     public int getId() {

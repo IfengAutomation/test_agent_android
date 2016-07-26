@@ -5,14 +5,24 @@ import java.util.Map;
 
 /**
  * Created by zhaoye on 16/7/19.
- *
  */
 public class Response {
     private int id;
-    private int version;
-    private int result;
+    private int version = 1;
+    private int result = 0;
     private String error = "";
-    private Map<String,Object> entity = new HashMap<>();
+    private Map<String, Object> entity = new HashMap<>();
+
+    public Response() {
+    }
+
+    public Response(int id, int version, int result, String error, Map<String, Object> entity) {
+        this.id = id;
+        this.version = version;
+        this.result = result;
+        this.error = error;
+        this.entity = entity;
+    }
 
     public int getId() {
         return id;
