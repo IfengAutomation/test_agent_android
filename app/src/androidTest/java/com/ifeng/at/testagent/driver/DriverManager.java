@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by zhaoye on 16/7/19.
+ * Created by lr on 16/7/19.
  *
  */
 public class DriverManager{
     private Solo solo;
-    private Map<String, MethodExecute> methodMap = new HashMap<>();// TODO 类名
+    private Map<String, RPCMethod> methodMap = new HashMap<>();
     private Map<String, Object> varCache = new HashMap<>();
 
     public DriverManager(){
@@ -30,45 +30,47 @@ public class DriverManager{
     }
 
     public Response soloCall(Request request){
-        Response response = null; //TODO 空引用
-        MethodExecute method = methodMap.get(request.getMethod());   //获取MethodExecute对象
+        Response response;
+        RPCMethod method = methodMap.get(request.getMethod());   //获取RPCMethod对象
 
         //method为空处理
         if (method != null){
             response = method.execute(request, solo, varCache);    //执行method
         }else{
             response = new Response();
-            response.setId(request.getId());
-            response.setVersion(request.getVersion());  //TODO response version不可set
-            response.setResult(0);    //TODO 0
-            response.setError("There are no method:" + request.getMethod()); //TODO 统一
+            response.setResult(response.RESULT_FAIL);
+            String errorMsg = response.errorMethodNotRegister(request.getMethod());
+            response.setError(errorMsg);
         }
 
         return response;
 
     }
 
-    //TODO
-    public Map<String, MethodExecute> registerMethodMap(){
+    private Map<String, RPCMethod> registerMethodMap(){
         ClickOnText clickOnText = new ClickOnText();
-        methodMap.put(clickOnText.getMethodName(), clickOnText);
+        register(clickOnText);
 
         EnterText enterText = new EnterText();
-        methodMap.put(enterText.getMethodName(), enterText);
+        register(enterText);
 
         GetView getView = new GetView();
-        methodMap.put(getView.getMethodName(), getView);
+        register(getView);
 
         WaitForText waitForText = new WaitForText();
-        methodMap.put(waitForText.getMethodName(),waitForText);
+        register(waitForText);
 
         StartMainActivity startMainActivity = new StartMainActivity();
-        methodMap.put(startMainActivity.getMethodName(), startMainActivity);
+        register(startMainActivity);
 
         FinishActivity finishActivity = new FinishActivity();
-        methodMap.put(finishActivity.getMethodName(), finishActivity);
+        register(finishActivity);
 
         return methodMap;
+    }
+
+    private void register(RPCMethod method){
+        methodMap.put(method.getClass().getSimpleName(), method);
     }
 
 }

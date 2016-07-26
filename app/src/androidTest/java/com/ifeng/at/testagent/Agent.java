@@ -3,10 +3,7 @@ package com.ifeng.at.testagent;
 import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityTestCase;
 
-import com.ifeng.at.testagent.driver.CommonDriver;
-import com.ifeng.at.testagent.driver.DriverManager;
 import com.ifeng.at.testagent.rpc.RpcClient;
 
 import org.junit.Before;

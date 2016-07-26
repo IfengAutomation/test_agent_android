@@ -9,9 +9,8 @@ import java.util.Map;
 /**
  * Created by lr on 2016/7/22.
  */
-public interface MethodExecute{
+public interface RPCMethod{
 
     Response execute(Request request, Solo solo, Map varCache);
-    String getMethodName();
 
 }

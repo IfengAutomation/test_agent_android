@@ -7,6 +7,10 @@ import java.util.Map;
  * Created by zhaoye on 16/7/19.
  */
 public class Response {
+
+    public int RESULT_SUCCESS = 1;
+    public int RESULT_FAIL = 0;
+
     private int id;
     private int version = 1;
     private int result = 0;
@@ -62,5 +66,25 @@ public class Response {
 
     public void setEntity(Map<String, Object> entity) {
         this.entity = entity;
+    }
+
+    /***
+     * Error 可设置的值
+     */
+    public String errorViewNotFound = "View not found.";
+
+    public String errorArgsNumberWrong(String methodName, int needNumber, int givenNumber){
+        String errorMsg;
+
+        if (needNumber == 0 || needNumber == 1){
+            errorMsg = methodName + " takes exactly " + needNumber + " argument (" + givenNumber + " given)";
+        } else {
+            errorMsg = methodName + " takes exactly " + needNumber + " arguments (" + givenNumber + " given)";
+        }
+        return errorMsg;
+    }
+
+    public String errorMethodNotRegister(String methodName){
+        return "Method:" + methodName + " has not been registered. ";
     }
 }
