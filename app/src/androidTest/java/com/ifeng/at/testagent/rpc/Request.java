@@ -8,7 +8,6 @@ import java.util.Objects;
  * Created by zhaoye on 16/7/19.
  */
 public class Request {
-    //TODO
     private int id;
     private int version;
     private String method;
@@ -19,7 +18,7 @@ public class Request {
 
     }
 
-    public Request(int id, int version, String method, String[] args,String var) {
+    public Request(int id, int version, String method, String[] args,String var) {//todo 数组放到最后 string...
         this.id = id;
         this.version = version;
         this.method = method;
