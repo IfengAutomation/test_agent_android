@@ -27,12 +27,7 @@ public class StartMainActivity implements RPCMethod {
             String errorMsg = response.errorArgsNumberWrong(RPCMethodName, 1, request.getArgs().length);
             response.setError(errorMsg);
         } else {
-              Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//            Intent intent = new Intent(Intent.ACTION_MAIN);
-//            intent.setClassName(instrumentation.getTargetContext(),request.getArgs()[0]); //TODO 参数更改为包名,不需启动类
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            instrumentation.startActivitySync(intent);
-
+            Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
             Context context = instrumentation.getContext();
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(request.getArgs()[0]);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);   // Clear out any previous instances
