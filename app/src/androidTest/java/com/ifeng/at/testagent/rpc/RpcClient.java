@@ -40,6 +40,7 @@ public class RpcClient {
             clientSocket = new Socket(host, port);        //绑定server
             buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
             writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
+            boolean registerSuccess = registerRequest(deviceId);//手机注册
             if (registerSuccess) {
                 listenToServer();//监听服务器发送请求
             }
