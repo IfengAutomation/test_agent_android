@@ -32,11 +32,11 @@ public class RpcClient {
             clientSocket = new Socket(host, port);        //绑定server
             buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
             writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
-            boolean registerSuc = registerRequest(deviceId);//手机注册
+            boolean registerSuc = registerRequest(deviceId);//手机注册  TODO 修改变量名称
             if (registerSuc) {
                 listenToServer();//监听服务器发送请求
             }
-        } catch (IOException e) {
+        } catch (IOException e) { //TODO 将异常分类抛出 I自己处理 II无法处理-抛 Juinit框架
             Log.e(TAG, e.getMessage());
         }
     }
@@ -47,11 +47,11 @@ public class RpcClient {
      * @param deviceId
      * @return
      */
-    public boolean registerRequest(String deviceId) throws IOException {
+    private boolean registerRequest(String deviceId) throws IOException {
         String[] args = {deviceId};
-        Request registerRequest = new Request(1, version, "register", args);
+        Request registerRequest = new Request(1, version, "register", args,"");
         Response registerResponse = registerHandle(registerRequest);//手机注册
-        if (registerResponse.getResult() == 1 && registerResponse.getId() == registerRequest.getId()) {
+        if (registerResponse.getResult() == 1 && registerResponse.getId() == registerRequest.getId()) {//todo 1
             Log.i(TAG, "注册成功");
             return true;
         } else {
@@ -66,9 +66,9 @@ public class RpcClient {
      * @param registerRequest
      * @return
      */
-    public Response registerHandle(Request registerRequest) throws IOException {
+    public Response registerHandle(Request registerRequest) throws IOException {//todo  方法private
         String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
-        Log.i(TAG,registerJsonStr);
+        Log.i(TAG,registerJsonStr);//TODO 删除无用日志 分级别 日志信息详细
         writer.write(registerJsonStr);
         writer.flush();
         String registerResponseStr = buf.readLine();
@@ -82,14 +82,14 @@ public class RpcClient {
      * @throws IOException
      */
     public void listenToServer() throws IOException {
-        BufferedReader buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+        //BufferedReader buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
         StringBuffer requestBuffer = new StringBuffer();
         requestBuffer.append(buf.readLine());
         while (true) {
-                if(!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {
+                if(!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {//TODO 使用特殊字符串 添加说明 如 null
                     Log.i(TAG, requestBuffer.toString());
                     Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
-                    Response response = requestHandler.handle(request);
+                    Response response = requestHandler.handle(request);//TODO 调用封装接口 做异常处理 设置出错 response
                     Log.i(TAG,decode(gson.toJson(response)));
                     String responseJson = encode(gson.toJson(response))+"\n";
                     writer.write(responseJson);

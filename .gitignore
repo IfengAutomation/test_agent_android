@@ -34,7 +34,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
+.idea/
 
 # Keystore files
 *.jks
@@ -98,3 +98,5 @@ crashlytics-build.properties
 fabric.properties
 
 .idea/misc.xml
+
+.idea/modules.xml

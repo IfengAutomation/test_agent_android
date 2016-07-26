@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DriverManager{
     private Solo solo;
-    private Map<String, MethodExecute> methodMap = new HashMap<>();
+    private Map<String, MethodExecute> methodMap = new HashMap<>();// TODO 类名
     private Map<String, Object> varCache = new HashMap<>();
 
     public DriverManager(){
@@ -30,7 +30,7 @@ public class DriverManager{
     }
 
     public Response soloCall(Request request){
-        Response response = null;
+        Response response = null; //TODO 空引用
         MethodExecute method = methodMap.get(request.getMethod());   //获取MethodExecute对象
 
         //method为空处理
@@ -39,15 +39,16 @@ public class DriverManager{
         }else{
             response = new Response();
             response.setId(request.getId());
-            response.setVersion(request.getVersion());
-            response.setResult(0);
-            response.setError("There are no method:" + request.getMethod());
+            response.setVersion(request.getVersion());  //TODO response version不可set
+            response.setResult(0);    //TODO 0
+            response.setError("There are no method:" + request.getMethod()); //TODO 统一
         }
 
         return response;
 
     }
 
+    //TODO
     public Map<String, MethodExecute> registerMethodMap(){
         ClickOnText clickOnText = new ClickOnText();
         methodMap.put(clickOnText.getMethodName(), clickOnText);

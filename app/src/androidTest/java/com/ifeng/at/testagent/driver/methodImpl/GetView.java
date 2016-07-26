@@ -28,7 +28,7 @@ public class GetView implements MethodExecute{
             return response;
         }
 
-        View view = solo.getView(request.getArgs()[0]);
+        View view = solo.getView(request.getArgs()[0]);//TODO view 为null处理
         if (request.getVar() != null){
             varCache.put(request.getVar(), view);
         }

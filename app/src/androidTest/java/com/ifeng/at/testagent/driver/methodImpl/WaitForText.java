@@ -27,12 +27,12 @@ public class WaitForText implements MethodExecute{
             return  response;
         }
 
-        boolean flag = solo.waitForText(request.getArgs()[0]);
-        entity.put("flag", flag);
+        boolean flag = solo.waitForText(request.getArgs()[0]); //TODO 超时时间,变量命名
+        entity.put("flag", flag); //TODO
 
         response.setEntity(entity);
         response.setResult(1);
-        response.setError("");
+        response.setError(""); //TODO 删除
 
         return response;
     }

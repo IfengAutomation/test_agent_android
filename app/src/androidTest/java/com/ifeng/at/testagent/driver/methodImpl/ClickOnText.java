@@ -19,8 +19,8 @@ public class ClickOnText implements MethodExecute {
         response.setVersion(request.getVersion());
 
         if (request.getArgs().length != 1){
-            response.setResult(0);
-            response.setError("Wrong number of args,need 2.");
+            response.setResult(0);    //TODO 0
+            response.setError("Wrong number of args,need 2."); //TODO error信息统一处理,做分类
             return  response;
         }
 
@@ -34,5 +34,5 @@ public class ClickOnText implements MethodExecute {
     @Override
     public String getMethodName() {
         return "clickOnText";
-    }
+    }//TODO 删除
 }

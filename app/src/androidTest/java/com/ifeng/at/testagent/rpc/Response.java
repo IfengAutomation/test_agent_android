@@ -8,7 +8,6 @@ import java.util.Map;
  *
  */
 public class Response {
-    //TODO
     private int id;
     private int version;
     private int result;

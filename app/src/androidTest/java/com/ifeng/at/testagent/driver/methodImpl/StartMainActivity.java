@@ -30,7 +30,7 @@ public class StartMainActivity implements MethodExecute {
 
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setClassName(instrumentation.getTargetContext(),request.getArgs()[0]);
+        intent.setClassName(instrumentation.getTargetContext(),request.getArgs()[0]); //TODO 参数更改为包名,不需启动类
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         instrumentation.startActivitySync(intent);
 
