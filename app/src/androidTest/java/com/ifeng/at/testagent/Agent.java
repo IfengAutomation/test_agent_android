@@ -1,5 +1,6 @@
 package com.ifeng.at.testagent;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,7 +13,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Created by zhaoye on 16/7/19.
- *
  */
 @RunWith(AndroidJUnit4.class)
 public class Agent {
@@ -25,7 +25,7 @@ public class Agent {
     private String id;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         Bundle arguments = InstrumentationRegistry.getArguments();
         host = arguments.getString(ARG_HOST);
         port = Integer.parseInt(arguments.getString(ARG_PORT));
@@ -33,11 +33,15 @@ public class Agent {
     }
 
     @Test
-    public void start(){
+    public void start() {
         //start RPC Client
         rpcClient = new RpcClient(new RPCRequestHandler());
-        rpcClient.startAndBlock(host,port,id);
+        rpcClient.startAndBlock(host, port, id);
     }
 
+    @Test
+    public void testRecommendVideoForward() throws Exception {
+        CommonUtil.startIfengVideo();
+    }
 
 }
