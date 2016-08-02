@@ -5,6 +5,7 @@ import android.widget.EditText;
 import com.ifeng.at.testagent.driver.RPCMethod;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.ResponseError;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -16,21 +17,21 @@ public class EnterText implements RPCMethod {
     @Override
     public Response execute(Request request, Solo solo, Map varCache) {
         Response response = new Response();
+        ResponseError error = new ResponseError();
 
         String errorMsg;
         if (request.getArgs().length != 2){     //传入参数args个数不正确
             response.setResult(response.RESULT_FAIL);
             String RPCMethodName = getClass().getSimpleName();
-            errorMsg = response.errorArgsNumberWrong(RPCMethodName, 1, request.getArgs().length);
             response.setError(errorMsg);
         } else {
-            EditText editText = (EditText) varCache.get(request.getArgs()[0]);
+            EditText editText = (EditText) varCache.get(Integer.parseInt(request.getArgs()[0]));//获取hashcode
             if (editText != null){
                 solo.enterText(editText, request.getArgs()[1]);
                 response.setResult(response.RESULT_SUCCESS);
             }else {
                 response.setResult(response.RESULT_FAIL);
-                errorMsg = response.errorViewNotFound;
+                errorMsg = error.errorViewNotFound;
                 response.setError(errorMsg);
             }
         }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ifeng.at.testagent.driver.RPCMethod;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.ResponseError;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -19,11 +20,12 @@ public class FinishActivity implements RPCMethod{
     @Override
     public Response execute(Request request, Solo solo, Map varCache) {
         Response response = new Response();
+        ResponseError error = new ResponseError();
 
-        if (request.getArgs().length != 0){    //传入参数args个数不正确
+        if (request.getArgs() != null && request.getArgs().length != 0){    //传入参数args个数不正确
             response.setResult(response.RESULT_FAIL);
             String RPCMethodName = getClass().getSimpleName();
-            String errorMsg = response.errorArgsNumberWrong(RPCMethodName, 1, request.getArgs().length);
+            String errorMsg = error.errorArgsNumberWrong(RPCMethodName, 1, request.getArgs().length);
             response.setError(errorMsg);
         } else {
             //关闭页面

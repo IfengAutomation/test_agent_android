@@ -10,6 +10,7 @@ import com.ifeng.at.testagent.driver.methodImpl.StartMainActivity;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.ResponseError;
 import com.robotium.solo.Solo;
 
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class DriverManager{
     private Solo solo;
     private Map<String, RPCMethod> methodMap = new HashMap<>();
     private Map varCache = new HashMap();
+    private ResponseError error = new ResponseError();
 
     public DriverManager(){
         solo = new Solo(InstrumentationRegistry.getInstrumentation());
@@ -39,7 +41,7 @@ public class DriverManager{
         }else{
             response = new Response();
             response.setResult(response.RESULT_FAIL);
-            String errorMsg = response.errorMethodNotRegister(request.getMethod());
+            String errorMsg = error.errorMethodNotRegister(request.getMethod());
             response.setError(errorMsg);
         }
 
