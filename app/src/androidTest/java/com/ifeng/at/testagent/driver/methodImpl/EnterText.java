@@ -23,6 +23,7 @@ public class EnterText implements RPCMethod {
         if (request.getArgs().length != 2){     //传入参数args个数不正确
             response.setResult(response.RESULT_FAIL);
             String RPCMethodName = getClass().getSimpleName();
+            errorMsg = error.errorArgsNumberWrong(RPCMethodName, 2, request.getArgs().length);
             response.setError(errorMsg);
         } else {
             EditText editText = (EditText) varCache.get(Integer.parseInt(request.getArgs()[0]));//获取hashcode
