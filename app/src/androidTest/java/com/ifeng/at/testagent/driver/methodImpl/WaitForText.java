@@ -26,10 +26,10 @@ public class WaitForText implements RPCMethod{
             response.setError(errorMsg);
         } else {
             boolean isAppear = solo.waitForText(request.getArgs()[0]);
-            entity.put("isAppear", isAppear);
+            if(isAppear){
+                response.setResult(response.RESULT_SUCCESS);
+            }
 
-            response.setEntity(entity);
-            response.setResult(response.RESULT_SUCCESS);
         }
 
         return response;
