@@ -2,11 +2,13 @@ package com.ifeng.at.testagent.driver;
 
 import android.support.test.InstrumentationRegistry;
 
+import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
 import com.ifeng.at.testagent.driver.methodImpl.FinishActivity;
 import com.ifeng.at.testagent.driver.methodImpl.GetView;
 import com.ifeng.at.testagent.driver.methodImpl.StartMainActivity;
+import com.ifeng.at.testagent.driver.methodImpl.SwitchToTab;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
@@ -67,6 +69,12 @@ public class DriverManager{
 
         FinishActivity finishActivity = new FinishActivity();
         register(finishActivity);
+
+        ClickOnView clickOnView = new ClickOnView();
+        register(clickOnView);
+
+        SwitchToTab switchToTab = new SwitchToTab();
+        register(switchToTab);
 
         return methodMap;
     }
