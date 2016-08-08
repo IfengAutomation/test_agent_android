@@ -26,7 +26,7 @@ public class ClickOnView implements RPCMethod {
             errorMsg = error.errorArgsNumberWrong(RPCMethodName, 1, request.getArgs().length);
             response.setError(errorMsg);
         } else {
-            View view = (View) varCache.get(Integer.parseInt(request.getArgs()[0]));//获取hashcode
+            View view = (View) varCache.get("code");//获取hashcode
             if (view != null){
                 solo.clickOnView(view);
                 response.setResult(response.RESULT_SUCCESS);
@@ -37,6 +37,7 @@ public class ClickOnView implements RPCMethod {
             }
         }
 
+        varCache.clear();
         return response;
     }
 }

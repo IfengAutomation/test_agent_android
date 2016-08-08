@@ -35,7 +35,7 @@ public class GetView implements RPCMethod{
             if (view != null){
                 int code = view.hashCode();
                 //agent端 动态存入key：hashcode，value：Object（view）
-                varCache.put(code, view);
+                varCache.put("code", view);
                 String packageName = view.getResources().getResourcePackageName(view.getId());
 
                 //返回entity，包括hashcode、view的各种属性

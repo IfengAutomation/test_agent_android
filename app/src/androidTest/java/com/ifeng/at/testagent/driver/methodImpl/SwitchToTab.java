@@ -27,7 +27,7 @@ public class SwitchToTab implements RPCMethod {
             errorMsg = error.errorArgsNumberWrong(RPCMethodName, 2, request.getArgs().length);
             response.setError(errorMsg);
         } else {
-            TabWidget tabWidget = (TabWidget) varCache.get(Integer.parseInt(request.getArgs()[0]));//获取hashcode
+            TabWidget tabWidget = (TabWidget) varCache.get("code");//获取hashcode
             if (tabWidget != null){
                 solo.clickOnView(tabWidget.getChildAt(Integer.parseInt(request.getArgs()[1])));
                 response.setResult(response.RESULT_SUCCESS);
@@ -38,6 +38,7 @@ public class SwitchToTab implements RPCMethod {
             }
         }
 
+        varCache.clear(); //使用完毕，清除暂存
         return response;
     }
 }

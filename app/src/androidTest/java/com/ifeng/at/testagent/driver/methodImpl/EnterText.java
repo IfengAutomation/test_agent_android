@@ -26,8 +26,9 @@ public class EnterText implements RPCMethod {
             errorMsg = error.errorArgsNumberWrong(RPCMethodName, 2, request.getArgs().length);
             response.setError(errorMsg);
         } else {
-            EditText editText = (EditText) varCache.get(Integer.parseInt(request.getArgs()[0]));//获取hashcode
+            EditText editText = (EditText) varCache.get("code");//获取hashcode
             if (editText != null){
+                solo.clearEditText(editText);
                 solo.enterText(editText, request.getArgs()[1]);
                 response.setResult(response.RESULT_SUCCESS);
             }else {
@@ -37,6 +38,7 @@ public class EnterText implements RPCMethod {
             }
         }
 
+        varCache.clear();
         return response;
     }
 
