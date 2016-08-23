@@ -6,8 +6,7 @@ import com.ifeng.at.testagent.rpc.RequestHandler;
 import com.ifeng.at.testagent.rpc.Response;
 
 /**
- * Created by zhaoye on 16/7/21.
- *
+ * Owner liuru
  */
 public class RPCRequestHandler implements RequestHandler{
     private DriverManager driverManager;
@@ -18,8 +17,6 @@ public class RPCRequestHandler implements RequestHandler{
 
     @Override
     public Response handle(Request request) {
-        //TODO handle request
-        Response response = driverManager.soloCall(request);
-        return response;
+        return driverManager.soloCall(request);
     }
 }

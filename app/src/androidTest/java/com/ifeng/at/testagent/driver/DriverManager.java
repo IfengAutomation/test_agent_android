@@ -12,25 +12,24 @@ import com.ifeng.at.testagent.driver.methodImpl.SwitchToTab;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
 import com.ifeng.at.testagent.rpc.Request;
 import com.ifeng.at.testagent.rpc.Response;
-import com.ifeng.at.testagent.rpc.ResponseError;
+import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
 import com.robotium.solo.Solo;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lr on 16/7/19.
+ * Owner liuru
  *
  */
 public class DriverManager{
     private Solo solo;
     private Map<String, RPCMethod> methodMap = new HashMap<>();
     private Map varCache = new HashMap();
-    private ResponseError error = new ResponseError();
 
     public DriverManager(){
         solo = new Solo(InstrumentationRegistry.getInstrumentation());
-        methodMap = registerMethodMap();
+        registerMethodMap();
     }
 
     public Response soloCall(Request request){
@@ -41,42 +40,21 @@ public class DriverManager{
         if (method != null){
             response = method.execute(request, solo, varCache);    //执行method
         }else{
-            response = new Response();
-            response.setResult(response.RESULT_FAIL);
-            String errorMsg = error.errorMethodNotRegister(request.getMethod());
-            response.setError(errorMsg);
+            response = ErrorResponseHelper.makeMethodNotRegisterErrorResponse(request.getMethod());
         }
 
         return response;
-
     }
 
-    private Map<String, RPCMethod> registerMethodMap(){
-        ClickOnText clickOnText = new ClickOnText();
-        register(clickOnText);
-
-        EnterText enterText = new EnterText();
-        register(enterText);
-
-        GetView getView = new GetView();
-        register(getView);
-
-        WaitForText waitForText = new WaitForText();
-        register(waitForText);
-
-        StartMainActivity startMainActivity = new StartMainActivity();
-        register(startMainActivity);
-
-        FinishActivity finishActivity = new FinishActivity();
-        register(finishActivity);
-
-        ClickOnView clickOnView = new ClickOnView();
-        register(clickOnView);
-
-        SwitchToTab switchToTab = new SwitchToTab();
-        register(switchToTab);
-
-        return methodMap;
+    private void registerMethodMap(){
+        register(new ClickOnText());
+        register(new EnterText());
+        register(new GetView());
+        register(new WaitForText());
+        register(new StartMainActivity());
+        register(new FinishActivity());
+        register(new ClickOnView());
+        register(new SwitchToTab());
     }
 
     private void register(RPCMethod method){

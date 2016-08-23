@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by zhaoye on 16/7/19.
+ * Owner lixintong.
+ *
  */
 public class Response {
 
-    public int RESULT_SUCCESS = 1;
-    public int RESULT_FAIL = 0;
+    public static final int RESULT_SUCCESS = 1;
+    public static final int RESULT_FAIL = 0;
 
     private int id;
     private int version = 1;
@@ -20,9 +21,8 @@ public class Response {
     public Response() {
     }
 
-    public Response(int id, int version, int result, String error, Map<String, Object> entity) {
+    public Response(int id, int result, String error, Map<String, Object> entity) {
         this.id = id;
-        this.version = version;
         this.result = result;
         this.error = error;
         this.entity = entity;
@@ -38,10 +38,6 @@ public class Response {
 
     public int getVersion() {
         return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     public int getResult() {

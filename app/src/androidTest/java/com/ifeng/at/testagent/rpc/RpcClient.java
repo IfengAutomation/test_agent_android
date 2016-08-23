@@ -16,14 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by zhaoye on 16/7/19.
+ * Owner lixintong
  */
 public class RpcClient {
     private RequestHandler requestHandler;
     private Socket clientSocket;
-    private int version = 1;
-    private int successResult = 1;
-    private int defalutResult = 0;
     private String TAG = "RpcClient ";
     private Gson gson = new Gson();
     private Writer writer;
@@ -57,9 +54,9 @@ public class RpcClient {
      * @return
      */
     private boolean registerRequest(String deviceId) throws IOException {
-        Request registerRequest = new Request(1, version, "register", "", deviceId);
+        Request registerRequest = new Request(1, "register", "", deviceId);
         Response registerResponse = registerHandle(registerRequest);//手机注册
-        if (registerResponse.getResult() == successResult && registerResponse.getId() == registerRequest.getId()) {
+        if (registerResponse.getResult() == Response.RESULT_SUCCESS && registerResponse.getId() == registerRequest.getId()) {
             Log.i(TAG, "注册成功");
             return true;
         } else {
@@ -100,9 +97,8 @@ public class RpcClient {
                 try {
                     response = requestHandler.handle(request);
                     response.setId(request.getId());
-                    response.setVersion(version);
-                } catch (Throwable e) {
-                    response = getErrorResponse(request, e);
+                } catch (Exception e) {
+                    response = makeErrorResponse(request, e);
                 }
                 Log.i(TAG, "keyword decode response :"+decode(gson.toJson(response)));
                 String responseJson = encode(gson.toJson(response)) + "\n";
@@ -114,14 +110,15 @@ public class RpcClient {
         }
     }
 
-    private Response getErrorResponse(Request request, Throwable e) {
-        Response response;StringWriter stringWriter = new StringWriter();
+    private Response makeErrorResponse(Request request, Throwable e) {
+        Response response;
+        StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
         Map<String, Object> entity = new HashMap<>();
         entity.put("type",e.getClass().getName());
         entity.put("detail message",stringWriter.toString());
-        response = new  Response(request.getId(),  version, defalutResult,"未知错误-请联系管理员", entity);
+        response = new  Response(request.getId(), Response.RESULT_FAIL, "未知错误-请联系管理员", entity);
         return response;
     }
 

@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by zhaoye on 16/7/19.
+ * Owner lixintong.
+ *
  */
 public class Request {
     private int id;
-    private int version;
+    private int version = 1;
     private String method;
     private String[] args;
     private String var;
@@ -18,9 +19,8 @@ public class Request {
 
     }
 
-    public Request(int id, int version, String method, String var,String... args) {
+    public Request(int id, String method, String var,String... args) {
         this.id = id;
-        this.version = version;
         this.method = method;
         this.var =  var;
         this.args = args;
@@ -34,13 +34,8 @@ public class Request {
         this.id = id;
     }
 
-
     public int getVersion() {
         return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     public String getMethod() {
