@@ -8,7 +8,7 @@ import com.robotium.solo.Solo;
 import java.util.Map;
 
 /**
- * Owner lr
+ * Owner liuru
  */
 public class WaitForText extends RPCMethod {
     public WaitForText() {

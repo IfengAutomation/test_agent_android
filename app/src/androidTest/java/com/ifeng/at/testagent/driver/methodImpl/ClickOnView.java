@@ -20,7 +20,8 @@ public class ClickOnView extends RPCMethod {
     @Override
     public Response handleRequest(Request request, Solo solo, Map varCache) {
         Response response;
-        View view = (View) varCache.get("code");//获取hashcode
+        int hash = Integer.parseInt(request.getArgs()[0]);//获取hashcode
+        View view = (View) varCache.get(hash);
         if (view != null) {
             solo.clickOnView(view);
             response = new Response();
@@ -29,7 +30,6 @@ public class ClickOnView extends RPCMethod {
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }
 
-        varCache.clear();
         return response;
     }
 }

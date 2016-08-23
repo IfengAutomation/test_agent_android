@@ -24,7 +24,7 @@ public abstract class RPCMethod{
         return null;
     }
 
-    public Response execute(Request request, Solo solo, Map varCache){
+    public Response execute(Request request, Solo solo, Map<Integer, Object> varCache){
         Response response = checkArgs(request);
         if(response == null){
             response = handleRequest(request, solo, varCache);
@@ -32,7 +32,7 @@ public abstract class RPCMethod{
         return response;
     }
 
-    public abstract Response handleRequest(Request request, Solo solo, Map varCache);
+    public abstract Response handleRequest(Request request, Solo solo, Map<Integer, Object> varCache);
 
 
 }

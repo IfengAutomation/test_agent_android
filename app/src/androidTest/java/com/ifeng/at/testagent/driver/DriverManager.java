@@ -25,7 +25,7 @@ import java.util.Map;
 public class DriverManager{
     private Solo solo;
     private Map<String, RPCMethod> methodMap = new HashMap<>();
-    private Map varCache = new HashMap();
+    private Map<Integer, Object> varCache = new HashMap<>();
 
     public DriverManager(){
         solo = new Solo(InstrumentationRegistry.getInstrumentation());

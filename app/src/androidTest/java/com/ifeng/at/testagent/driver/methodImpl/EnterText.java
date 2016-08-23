@@ -20,7 +20,8 @@ public class EnterText extends RPCMethod {
     @Override
     public Response handleRequest(Request request, Solo solo, Map varCache) {
         Response response;
-        EditText editText = (EditText) varCache.get("code");//获取hashcode
+        int hash = Integer.parseInt(request.getArgs()[0]);//获取hashcode
+        EditText editText = (EditText) varCache.get(hash);
         if (editText != null) {
             solo.clearEditText(editText);
             solo.enterText(editText, request.getArgs()[1]);
@@ -30,7 +31,6 @@ public class EnterText extends RPCMethod {
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }
 
-        varCache.clear();
         return response;
     }
 

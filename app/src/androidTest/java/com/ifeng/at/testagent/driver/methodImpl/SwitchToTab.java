@@ -20,8 +20,8 @@ public class SwitchToTab extends RPCMethod {
     @Override
     public Response handleRequest(Request request, Solo solo, Map varCache) {
         Response response;
-
-        TabWidget tabWidget = (TabWidget) varCache.get("code");//获取hashcode
+        int hash = Integer.parseInt(request.getArgs()[0]);//获取hashcode
+        TabWidget tabWidget = (TabWidget) varCache.get(hash);
         if (tabWidget != null) {
 
             solo.clickOnView(tabWidget.getChildAt(Integer.parseInt(request.getArgs()[1])));
@@ -31,7 +31,6 @@ public class SwitchToTab extends RPCMethod {
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }
 
-        varCache.clear(); //使用完毕，清除暂存
         return response;
     }
 }
