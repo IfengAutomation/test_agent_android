@@ -28,7 +28,7 @@ public class GetView extends RPCMethod {
         String packageName;
         String className;
         String contentDescription;
-        CharSequence text = "";
+        String text = "";
 
         try{
             view = solo.getView(request.getArgs()[0]);
@@ -51,7 +51,7 @@ public class GetView extends RPCMethod {
 
         //判断是否继承自TextView，true：获取text；false：设置text为空
         if (TextView.class.isInstance(view)) {
-            text = ((TextView) view).getText();
+            text = ((TextView) view).getText().toString();
         }
         entity.put("text", text + "");
         entity.put("resource-id", packageName + ":id/" + request.getArgs()[0]);
