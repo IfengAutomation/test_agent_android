@@ -32,18 +32,14 @@ public class RpcClient {
     }
 
 
-    public void startAndBlock(String host, int port, String deviceId)  {
-        try {
-            clientSocket = new Socket(host, port);        //绑定server
-            buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
-            writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
-            boolean registerSuccess = registerRequest(deviceId);//手机注册
-            if (registerSuccess) {
-                listenToServer();//监听服务器发送请求
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG,"socket 连接出错\n"+e.getMessage());
+    public void startAndBlock(String host, int port, String deviceId) throws IOException {
+        Log.i(TAG, "connect to "+host+" id="+deviceId);
+        clientSocket = new Socket(host, port);        //绑定server
+        buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+        writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
+        boolean registerSuccess = registerRequest(deviceId);//手机注册
+        if (registerSuccess) {
+            listenToServer();//监听服务器发送请求
         }
     }
 
@@ -73,7 +69,7 @@ public class RpcClient {
      */
     private Response registerHandle(Request registerRequest) throws IOException {
         String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
-        Log.i(TAG, "register response message :"+registerJsonStr);
+        Log.i(TAG, "register response message :" + registerJsonStr);
         writer.write(registerJsonStr);
         writer.flush();
         String registerResponseStr = buf.readLine();
@@ -91,7 +87,7 @@ public class RpcClient {
         requestBuffer.append(buf.readLine());
         while (true) {
             if (!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {//server 无数据请求时,requestBuffer为"null"
-                Log.i(TAG, "keyword request :"+requestBuffer.toString());
+                Log.i(TAG, "keyword request :" + requestBuffer.toString());
                 Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
                 Response response = null;
                 try {
@@ -100,7 +96,7 @@ public class RpcClient {
                 } catch (Exception e) {
                     response = makeErrorResponse(request, e);
                 }
-                Log.i(TAG, "keyword decode response :"+decode(gson.toJson(response)));
+                Log.i(TAG, "keyword decode response :" + decode(gson.toJson(response)));
                 String responseJson = encode(gson.toJson(response)) + "\n";
                 writer.write(responseJson);
                 writer.flush();
@@ -116,9 +112,9 @@ public class RpcClient {
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
         Map<String, Object> entity = new HashMap<>();
-        entity.put("type",e.getClass().getName());
-        entity.put("detail message",stringWriter.toString());
-        response = new  Response(request.getId(), Response.RESULT_FAIL, "未知错误-请联系管理员", entity);
+        entity.put("type", e.getClass().getName());
+        entity.put("detail message", stringWriter.toString());
+        response = new Response(request.getId(), Response.RESULT_FAIL, "未知错误-请联系管理员", entity);
         return response;
     }
 

@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+
 /**
  * Owner lixintong
  */
@@ -18,7 +20,6 @@ public class Agent {
     public static final String ARG_HOST = "host";
     public static final String ARG_PORT = "port";
     public static final String ARG_DEVICE_ID = "id";
-    private RpcClient rpcClient;
     private String host;
     private int port;
     private String id;
@@ -32,9 +33,9 @@ public class Agent {
     }
 
     @Test
-    public void start() {
+    public void start() throws IOException {
         //start RPC Client
-        rpcClient = new RpcClient(new RPCRequestHandler());
+        RpcClient rpcClient = new RpcClient(new RPCRequestHandler());
         rpcClient.startAndBlock(host, port, id);
     }
 
