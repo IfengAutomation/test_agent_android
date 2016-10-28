@@ -5,5 +5,5 @@ package com.ifeng.at.testagent.rpc;
  *
  */
 public interface RequestHandler {
-    Response handle(Request request);
+    RPCMessage handle(RPCMessage request);
 }

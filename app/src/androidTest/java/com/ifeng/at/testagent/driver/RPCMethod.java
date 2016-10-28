@@ -1,8 +1,7 @@
 package com.ifeng.at.testagent.driver;
 
 import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -17,22 +16,22 @@ public abstract class RPCMethod{
         this.argsNumber = argsNumber;
     }
 
-    public Response checkArgs(Request request){
-        if(request.getArgs().length < argsNumber){
-            return ErrorResponseHelper.makeArgsNumberErrorResponse(getClass(),argsNumber,request.getArgs().length);
+    public RPCMessage checkArgs(RPCMessage request){
+        if(request.getArgs().size() < argsNumber){
+            return ErrorResponseHelper.makeArgsNumberErrorResponse(getClass(),argsNumber,request.getArgs().size());
         }
         return null;
     }
 
-    public Response execute(Request request, Solo solo, Map<Integer, Object> varCache){
-        Response response = checkArgs(request);
+    public RPCMessage execute(RPCMessage request, Solo solo, Map<Integer, Object> varCache){
+        RPCMessage response = checkArgs(request);
         if(response == null){
             response = handleRequest(request, solo, varCache);
         }
         return response;
     }
 
-    public abstract Response handleRequest(Request request, Solo solo, Map<Integer, Object> varCache);
+    public abstract RPCMessage handleRequest(RPCMessage request, Solo solo, Map<Integer, Object> varCache);
 
 
 }

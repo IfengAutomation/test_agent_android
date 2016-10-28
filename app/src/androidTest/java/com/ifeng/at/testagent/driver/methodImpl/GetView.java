@@ -4,8 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ifeng.at.testagent.driver.RPCMethod;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.HashMap;
@@ -20,9 +19,9 @@ public class GetView extends RPCMethod {
     }
 
     @Override
-    public Response handleRequest(Request request, Solo solo, Map<Integer, Object> varCache) {
+    public RPCMessage handleRequest(RPCMessage request, Solo solo, Map<Integer, Object> varCache) {
 
-        Response response;
+        RPCMessage response;
         View view;
         int code;
         String packageName;
@@ -31,7 +30,7 @@ public class GetView extends RPCMethod {
         String text = "";
 
         try{
-            view = solo.getView(request.getArgs()[0]);
+            view = solo.getView((String)request.getArgs().get(0));
             code = view.hashCode();
             packageName = view.getResources().getResourcePackageName(view.getId());
             className = view.getClass().getName();
@@ -54,16 +53,12 @@ public class GetView extends RPCMethod {
             text = ((TextView) view).getText().toString();
         }
         entity.put("text", text + "");
-        entity.put("resource-id", packageName + ":id/" + request.getArgs()[0]);
+        entity.put("resource-id", packageName + ":id/" + request.getArgs().get(0));
         entity.put("class", className);
         entity.put("package", packageName);
         entity.put("content-desc", contentDescription);
 
-        response = new Response();
-        response.setResult(Response.RESULT_SUCCESS);
-        response.setEntity(entity);
-
-        return response;
+        return RPCMessage.makeSuccessResult(entity);
     }
 
 }

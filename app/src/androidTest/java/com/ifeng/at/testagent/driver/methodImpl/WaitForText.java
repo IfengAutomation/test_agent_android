@@ -1,8 +1,7 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
 import com.ifeng.at.testagent.driver.RPCMethod;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -16,15 +15,13 @@ public class WaitForText extends RPCMethod {
     }
 
     @Override
-    public Response handleRequest(Request request, Solo solo, Map varCache) {
-        Response response = new Response();
-
-        boolean isAppear = solo.waitForText(request.getArgs()[0]);
+    public RPCMessage handleRequest(RPCMessage request, Solo solo, Map varCache) {
+        boolean isAppear = solo.waitForText((String) request.getArgs().get(0));
         if (isAppear) {
-            response.setResult(Response.RESULT_SUCCESS);
+            return RPCMessage.makeSuccessResult();
+        }else{
+            return RPCMessage.makeFailResult("Text " + request.getArgs().get(0) + "not found!");
         }
-
-        return response;
     }
 
 }

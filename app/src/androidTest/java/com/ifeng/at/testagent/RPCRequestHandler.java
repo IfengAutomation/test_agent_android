@@ -1,9 +1,8 @@
 package com.ifeng.at.testagent;
 
 import com.ifeng.at.testagent.driver.DriverManager;
-import com.ifeng.at.testagent.rpc.Request;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.ifeng.at.testagent.rpc.RequestHandler;
-import com.ifeng.at.testagent.rpc.Response;
 
 /**
  * Owner liuru
@@ -16,7 +15,7 @@ public class RPCRequestHandler implements RequestHandler{
     }
 
     @Override
-    public Response handle(Request request) {
+    public RPCMessage handle(RPCMessage request) {
         return driverManager.soloCall(request);
     }
 }

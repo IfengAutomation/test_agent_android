@@ -1,8 +1,7 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
 import com.ifeng.at.testagent.driver.RPCMethod;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -17,11 +16,9 @@ public class ClickOnText extends RPCMethod {
     }
 
     @Override
-    public Response handleRequest(Request request, Solo solo, Map varCache) {
-        solo.clickOnText(request.getArgs()[0]);
-        Response response = new Response();
-        response.setResult(Response.RESULT_SUCCESS);
-        return response;
+    public RPCMessage handleRequest(RPCMessage request, Solo solo, Map varCache) {
+        solo.clickOnText((String) request.getArgs().get(0));
+        return RPCMessage.makeSuccessResult();
     }
 
 }

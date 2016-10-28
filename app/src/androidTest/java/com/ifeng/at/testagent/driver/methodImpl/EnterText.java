@@ -3,8 +3,7 @@ package com.ifeng.at.testagent.driver.methodImpl;
 import android.widget.EditText;
 
 import com.ifeng.at.testagent.driver.RPCMethod;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.Map;
@@ -18,15 +17,14 @@ public class EnterText extends RPCMethod {
     }
 
     @Override
-    public Response handleRequest(Request request, Solo solo, Map varCache) {
-        Response response;
-        int hash = Integer.parseInt(request.getArgs()[0]);//获取hashcode
+    public RPCMessage handleRequest(RPCMessage request, Solo solo, Map varCache) {
+        RPCMessage response;
+        int hash = Integer.parseInt((String) request.getArgs().get(0));//获取hashcode
         EditText editText = (EditText) varCache.get(hash);
         if (editText != null) {
             solo.clearEditText(editText);
-            solo.enterText(editText, request.getArgs()[1]);
-            response = new Response();
-            response.setResult(Response.RESULT_SUCCESS);
+            solo.enterText(editText, (String) request.getArgs().get(0));
+            response = RPCMessage.makeSuccessResult();
         } else {
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }

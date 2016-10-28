@@ -24,7 +24,7 @@ public class RpcClient {
     private String TAG = "RpcClient ";
     private Gson gson = new Gson();
     private Writer writer;
-    private BufferedReader buf;
+    private BufferedReader reader;
 
 
     public RpcClient(RequestHandler requestHandler) {
@@ -35,66 +35,44 @@ public class RpcClient {
     public void startAndBlock(String host, int port, String deviceId) throws IOException {
         Log.i(TAG, "connect to "+host+" id="+deviceId);
         clientSocket = new Socket(host, port);        //绑定server
-        buf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+        reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
         writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
-        boolean registerSuccess = registerRequest(deviceId);//手机注册
-        if (registerSuccess) {
-            listenToServer();//监听服务器发送请求
-        }
+        registerToServer(deviceId);
+        listenToServer();
     }
 
-    /**
-     * 手机注册
-     *
-     * @param deviceId
-     * @return
-     */
-    private boolean registerRequest(String deviceId) throws IOException {
-        Request registerRequest = new Request(1, "register", "", deviceId);
-        Response registerResponse = registerHandle(registerRequest);//手机注册
-        if (registerResponse.getResult() == Response.RESULT_SUCCESS && registerResponse.getId() == registerRequest.getId()) {
-            Log.i(TAG, "注册成功");
-            return true;
-        } else {
-            Log.i(TAG, "注册失败");
-            return false;
-        }
-    }
-
-    /**
-     * 注册请求
-     *
-     * @param registerRequest
-     * @return
-     */
-    private Response registerHandle(Request registerRequest) throws IOException {
-        String registerJsonStr = encode(gson.toJson(registerRequest)) + "\n";
-        Log.i(TAG, "register response message :" + registerJsonStr);
-        writer.write(registerJsonStr);
+    private void registerToServer(String deviceId) throws IOException {
+        RPCMessage registerMsg = new RPCMessage();
+        registerMsg.setMsgId(1);
+        registerMsg.setName("register");
+        registerMsg.setMsgType(RPCMessage.RPCCall);
+        registerMsg.getArgs().add(deviceId);
+        writer.write(gson.toJson(registerMsg) + '\n');
         writer.flush();
-        String registerResponseStr = buf.readLine();
-        Response registerResponse = gson.fromJson(decode(registerResponseStr), Response.class);
-        return registerResponse;
+        String serverResponse = reader.readLine();
+        //TODO
     }
+
 
     /**
      * 监听server 请求
      *
      * @throws IOException
      */
-    public void listenToServer() throws IOException {
-        StringBuffer requestBuffer = new StringBuffer();
-        requestBuffer.append(buf.readLine());
+    private void listenToServer() throws IOException {
+        StringBuilder requestBuffer = new StringBuilder();
+        requestBuffer.append(reader.readLine());
         while (true) {
             if (!"".equals(requestBuffer.toString()) && !"null".equals(requestBuffer.toString())) {//server 无数据请求时,requestBuffer为"null"
                 Log.i(TAG, "keyword request :" + requestBuffer.toString());
-                Request request = gson.fromJson(decode(requestBuffer.toString()), Request.class);
-                Response response = null;
+                RPCMessage message = RPCMessage.fromJson(decode(requestBuffer.toString()));
+                RPCMessage response;
                 try {
-                    response = requestHandler.handle(request);
-                    response.setId(request.getId());
+                    response = requestHandler.handle(message);
+                    response.setMsgType(RPCMessage.RPCResult);
+                    response.setMsgId(message.getMsgId());
                 } catch (Exception e) {
-                    response = makeErrorResponse(request, e);
+                    response = makeErrorResponse(message, e);
                 }
                 Log.i(TAG, "keyword decode response :" + decode(gson.toJson(response)));
                 String responseJson = encode(gson.toJson(response)) + "\n";
@@ -102,20 +80,18 @@ public class RpcClient {
                 writer.flush();
             }
             requestBuffer.delete(0, requestBuffer.length());
-            requestBuffer.append(buf.readLine());
+            requestBuffer.append(reader.readLine());
         }
     }
 
-    private Response makeErrorResponse(Request request, Throwable e) {
-        Response response;
+    private RPCMessage makeErrorResponse(RPCMessage request, Throwable e) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
         Map<String, Object> entity = new HashMap<>();
         entity.put("type", e.getClass().getName());
         entity.put("detail message", stringWriter.toString());
-        response = new Response(request.getId(), Response.RESULT_FAIL, "未知错误-请联系管理员", entity);
-        return response;
+        return RPCMessage.makeFailResult("未知错误-请联系管理员", entity);
     }
 
 

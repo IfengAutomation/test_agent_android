@@ -2,17 +2,16 @@ package com.ifeng.at.testagent.driver;
 
 import android.support.test.InstrumentationRegistry;
 
-import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
+import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
+import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
 import com.ifeng.at.testagent.driver.methodImpl.FinishActivity;
 import com.ifeng.at.testagent.driver.methodImpl.GetView;
 import com.ifeng.at.testagent.driver.methodImpl.StartMainActivity;
 import com.ifeng.at.testagent.driver.methodImpl.SwitchToTab;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
-import com.ifeng.at.testagent.rpc.Request;
-import com.ifeng.at.testagent.rpc.Response;
-import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
 import java.util.HashMap;
@@ -32,15 +31,15 @@ public class DriverManager{
         registerMethodMap();
     }
 
-    public Response soloCall(Request request){
-        Response response;
-        RPCMethod method = methodMap.get(request.getMethod());   //获取RPCMethod对象
+    public RPCMessage soloCall(RPCMessage request){
+        RPCMessage response;
+        RPCMethod method = methodMap.get(request.getName());   //获取RPCMethod对象
 
         //method为空处理
         if (method != null){
             response = method.execute(request, solo, varCache);    //执行method
         }else{
-            response = ErrorResponseHelper.makeMethodNotRegisterErrorResponse(request.getMethod());
+            response = ErrorResponseHelper.makeMethodNotRegisterErrorResponse(request.getName());
         }
 
         return response;
@@ -51,7 +50,7 @@ public class DriverManager{
         register(new EnterText());
         register(new GetView());
         register(new WaitForText());
-        register(new StartMainActivity());
+        register("LaunchApp", new StartMainActivity());
         register(new FinishActivity());
         register(new ClickOnView());
         register(new SwitchToTab());
@@ -61,4 +60,7 @@ public class DriverManager{
         methodMap.put(method.getClass().getSimpleName(), method);
     }
 
+    private void register(String methodName, RPCMethod method){
+        methodMap.put(methodName, method);
+    }
 }
