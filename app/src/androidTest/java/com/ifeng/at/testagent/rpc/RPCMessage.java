@@ -41,6 +41,9 @@ public class RPCMessage {
         RPCMessage msg = new RPCMessage();
         msg.setName("OK");
         msg.setMsgType(RPCResult);
+        for (Object entity : messages){
+            msg.getArgs().add(entity);
+        }
         return msg;
     }
 

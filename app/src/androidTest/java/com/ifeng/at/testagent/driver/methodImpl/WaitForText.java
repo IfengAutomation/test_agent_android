@@ -16,6 +16,7 @@ public class WaitForText extends RPCMethod {
 
     @Override
     public RPCMessage handleRequest(RPCMessage request, Solo solo, Map varCache) {
+        //Waits for the specified text to appear. Default timeout is 20 seconds.
         boolean isAppear = solo.waitForText((String) request.getArgs().get(0));
         if (isAppear) {
             return RPCMessage.makeSuccessResult();

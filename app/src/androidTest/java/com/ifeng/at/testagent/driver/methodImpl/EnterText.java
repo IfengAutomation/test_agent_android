@@ -23,7 +23,7 @@ public class EnterText extends RPCMethod {
         EditText editText = (EditText) varCache.get(hash);
         if (editText != null) {
             solo.clearEditText(editText);
-            solo.enterText(editText, (String) request.getArgs().get(0));
+            solo.enterText(editText, (String) request.getArgs().get(1));
             response = RPCMessage.makeSuccessResult();
         } else {
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
