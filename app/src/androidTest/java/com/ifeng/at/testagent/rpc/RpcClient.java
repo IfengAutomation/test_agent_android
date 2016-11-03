@@ -71,7 +71,7 @@ public class RpcClient {
                     response = requestHandler.handle(message);
                     response.setMsgType(RPCMessage.RPCResult);
                     response.setMsgId(message.getMsgId());
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     response = makeErrorResponse(message, e);
                 }
                 Log.i(TAG, "keyword decode response :" + decode(gson.toJson(response)));

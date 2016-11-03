@@ -17,7 +17,15 @@ public class ClickOnText extends RPCMethod {
 
     @Override
     public RPCMessage handleRequest(RPCMessage request, Solo solo, Map varCache) {
-        solo.clickOnText((String) request.getArgs().get(0));
+        RPCMessage response;
+
+        try{
+            solo.clickOnText((String) request.getArgs().get(0));
+        }catch (Throwable e){
+            response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
+            return  response;
+        }
+
         return RPCMessage.makeSuccessResult();
     }
 

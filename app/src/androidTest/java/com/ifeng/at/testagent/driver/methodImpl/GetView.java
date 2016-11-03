@@ -35,7 +35,7 @@ public class GetView extends RPCMethod {
             packageName = view.getResources().getResourcePackageName(view.getId());
             className = view.getClass().getName();
             contentDescription = view.getContentDescription() + "";
-        } catch (Exception e){
+        } catch (Throwable t){
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
             return  response;
         }
