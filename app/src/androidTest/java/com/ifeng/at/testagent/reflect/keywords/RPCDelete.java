@@ -17,6 +17,6 @@ public class RPCDelete implements RPCKeyword {
 
     @Override
     public RPCMessage execute(RPCContext context, RPCMessage message) {
-        return null;
+        return RPCMessage.makeSuccessResult("");
     }
 }
