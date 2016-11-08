@@ -19,18 +19,16 @@ import java.util.Map;
  * Owner lixintong
  */
 public class RpcClient {
-    private RequestHandler requestHandler;
     private Socket clientSocket;
     private String TAG = "RpcClient ";
     private Gson gson = new Gson();
     private Writer writer;
     private BufferedReader reader;
+    private Map<Integer, RequestHandler> handlers = new HashMap<>();
 
-
-    public RpcClient(RequestHandler requestHandler) {
-        this.requestHandler = requestHandler;
+    public void addHandler(int ver, RequestHandler requestHandler){
+        handlers.put(ver, requestHandler);
     }
-
 
     public void startAndBlock(String host, int port, String deviceId) throws IOException {
         Log.i(TAG, "connect to "+host+" id="+deviceId);
@@ -68,7 +66,7 @@ public class RpcClient {
                 RPCMessage message = RPCMessage.fromJson(decode(requestBuffer.toString()));
                 RPCMessage response;
                 try {
-                    response = requestHandler.handle(message);
+                    response = handlers.get(message.getVersion()).handle(message);
                     response.setMsgType(RPCMessage.RPCResult);
                     response.setMsgId(message.getMsgId());
                 } catch (Throwable e) {

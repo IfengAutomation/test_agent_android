@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ifeng.at.testagent.reflect.ReflectionHandler;
 import com.ifeng.at.testagent.rpc.RpcClient;
 
 import org.junit.Before;
@@ -35,7 +36,9 @@ public class Agent {
     @Test
     public void start() throws IOException {
         //start RPC Client
-        RpcClient rpcClient = new RpcClient(new RPCRequestHandler());
+        RpcClient rpcClient = new RpcClient();
+        rpcClient.addHandler(1, new RPCRequestHandler());
+        rpcClient.addHandler(2, new ReflectionHandler());
         rpcClient.startAndBlock(host, port, id);
     }
 
