@@ -46,7 +46,7 @@ public class GetView extends RPCMethod {
         varCache.put(code, view);
 
         //返回entity，包括hashcode、view的各种属性
-        entity.put("hash", code); //存入hashCode
+        entity.put("hash", code + ""); //存入hashCode
 
         //判断是否继承自TextView，true：获取text；false：设置text为空
         if (TextView.class.isInstance(view)) {
