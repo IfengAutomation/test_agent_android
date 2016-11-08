@@ -9,7 +9,6 @@ import com.ifeng.at.testagent.rpc.RPCMessage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhaoye on 2016/11/3.
@@ -29,44 +28,30 @@ public class RPCCall implements RPCKeyword {
         if(args.size() < 2){
             return RPCMessage.makeFailResult("RPC Call need at least 2 arguments. 1)instance 2)method name");
         }
-        Object remoteInstanceMap = args.get(0);
-        Object methodName = args.get(1);
-        if(!(remoteInstanceMap instanceof Map)){
-            return RPCMessage.makeFailResult("RPC Call failed. Argument 1 is not a remote object");
-        }
-        if(!(methodName instanceof String)){
-            return RPCMessage.makeFailResult("RPC Call failed. Argument 2 is not a method name");
-        }
-
-        if(!((Map) remoteInstanceMap).containsKey("hash")){
-            return RPCMessage.makeFailResult("RPC Call failed. Remote instance not have att \'hash\'");
-        }
-
-        String hashStr = (String) ((Map) remoteInstanceMap).get("hash");
-        int remoteInstanceHash = Integer.parseInt(hashStr);
-
-        Object remoteInstance = context.getVars().get(remoteInstanceHash);
-        if(remoteInstance == null){
-            return RPCMessage.makeFailResult("RPC Call failed. Not found remote instance");
-        }
 
         InstanceProxyHelper.Args reflectionArgs;
         try {
-            reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, args.subList(2, args.size()));
+            reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, args);
         } catch (ReflectionException e) {
             return RPCMessage.makeFailResult("RPC Call failed. "+e.getMessage());
         }
 
+        Object remoteInstance = reflectionArgs.getArgs().get(0);
+        Object methodName = reflectionArgs.getArgs().get(1);
+        if(!(methodName instanceof String)){
+            return RPCMessage.makeFailResult("RPC Call failed. method name is not string");
+        }
+
         Method method;
         try {
-            method = remoteInstance.getClass().getMethod(((String) methodName), reflectionArgs.getArgTypesArray());
+            method = remoteInstance.getClass().getMethod(((String) methodName), reflectionArgs.getArgTypesArray(2));
         } catch (NoSuchMethodException e) {
             return RPCMessage.makeFailResult("RPC Call failed. "+e.getMessage());
         }
 
-        Object result = null;
+        Object result;
         try {
-            result = method.invoke(remoteInstance, reflectionArgs.getArgsArray());
+            result = method.invoke(remoteInstance, reflectionArgs.getArgsArray(2));
         } catch (IllegalAccessException | InvocationTargetException e) {
             return RPCMessage.makeFailResult("RPC Call failed." + e.getMessage());
         }

@@ -5,7 +5,9 @@ import android.widget.TextView;
 
 import com.ifeng.at.testagent.reflect.exceptions.ReflectionException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +24,12 @@ public class InstanceProxyHelper {
     public static Map<String, String> getProxyFromInstance(Object instance){
         Map<String, String> proxyObject = new HashMap<>();
         proxyObject.put("hash", ""+instance.hashCode());
-        proxyObject.put("class", instance.getClass().getName());
+        proxyObject.put("class_name", instance.getClass().getName());
         if(instance instanceof View){
-            proxyObject.put("resource-id",
+            proxyObject.put("resource_id",
                     ((View) instance).getResources().getResourceName(((View) instance).getId()));
+            proxyObject.put("package_name",((View) instance).getContext().getPackageName());
+            proxyObject.put("context_desc", ((View) instance).getContentDescription().toString());
         }
         if(instance instanceof TextView){
             proxyObject.put("text", ((TextView) instance).getText().toString());
@@ -37,8 +41,8 @@ public class InstanceProxyHelper {
         Args reflectionArgs = new Args();
         for(int i=0; i<args.size(); i++){
             Object arg = args.get(i);
-            String type = ((String)arg).substring(0, 1);
-            String value = ((String)arg).substring(2, ((String) arg).length());
+            String type = ((String)arg).substring(0, 2);
+            String value = ((String)arg).substring(2);
             if(ArgumentType.CLASS.equals(type)){
                 try {
                     Class argClazz = Class.forName(value);
@@ -53,7 +57,7 @@ public class InstanceProxyHelper {
             }else if(ArgumentType.STRING.equals(type)){
                 reflectionArgs.getArgTypes().add(String.class);
                 reflectionArgs.getArgs().add(value);
-            }else if(ArgumentType.VAR.equals(type)){
+            }else if(ArgumentType.OBJECT.equals(type)){
                 int hash = Integer.parseInt(value);
                 if(!context.getVars().containsKey(hash)){
                     throw new ReflectionException("Argument remote object not found");
@@ -86,9 +90,25 @@ public class InstanceProxyHelper {
             return argTypes.toArray(typesArray);
         }
 
+        public Class[] getArgTypesArray(int start){
+            return Arrays.copyOfRange(getArgTypesArray(), start, argTypes.size());
+        }
+
+        public Class[] getArgTypesArray(int start, int end){
+            return Arrays.copyOfRange(getArgTypesArray(), start, end);
+        }
+
         public Object[] getArgsArray(){
             Object[] argsArray = new Object[args.size()];
             return args.toArray(argsArray);
+        }
+
+        public Object[] getArgsArray(int start){
+            return Arrays.copyOfRange(getArgsArray(), start, args.size());
+        }
+
+        public Object[] getArgsArray(int start, int end){
+            return Arrays.copyOfRange(getArgsArray(), start, end);
         }
     }
 }

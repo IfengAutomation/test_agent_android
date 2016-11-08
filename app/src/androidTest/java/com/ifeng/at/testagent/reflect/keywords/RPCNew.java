@@ -29,25 +29,28 @@ public class RPCNew implements RPCKeyword {
             return RPCMessage.makeFailResult("RPC new need at least 1 arguments. e.g. rpcNew(class)");
         }
 
-        String className = (String) args.get(0);
-
-        Class clazz;
+        InstanceProxyHelper.Args reflectionArgs;
         try {
-            clazz = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            return RPCMessage.makeFailResult("Create new instance failed. Class not found : "+className);
+            reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, message.getArgs());
+        } catch (ReflectionException e) {
+            return RPCMessage.makeFailResult("RPC new failed."+e.getMessage());
+        }
+
+        Object clazz = reflectionArgs.getArgs().get(0);
+        if(!(clazz instanceof Class)){
+            return RPCMessage.makeFailResult("RPC new failed. First arg was not a class");
         }
 
         RPCMessage response;
         if(args.size() > 1){
             try {
-                response = newInstance(context, clazz, args.subList(1, args.size()));
+                response = newInstance(context, (Class) clazz, reflectionArgs);
             } catch (NoSuchMethodException | ReflectionException e) {
                 response = RPCMessage.makeFailResult("Create new instance failed. "+e.getMessage());
             }
         }else{
             try {
-                response = newInstance(context, clazz);
+                response = newInstance(context, (Class) clazz);
             }catch (InstantiationException | IllegalAccessException e) {
                 response = RPCMessage.makeFailResult("Create nwe instance failed. " + e.getMessage());
             }
@@ -61,15 +64,11 @@ public class RPCNew implements RPCKeyword {
         return RPCMessage.makeSuccessResult(InstanceProxyHelper.getProxyFromInstance(newInstance));
     }
 
-    private RPCMessage newInstance(RPCContext context, Class clazz, List<Object> args) throws ReflectionException, NoSuchMethodException {
-        InstanceProxyHelper.Args reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, args);
-
-
-
-        Constructor constructor = clazz.getConstructor(reflectionArgs.getArgTypesArray());
+    private RPCMessage newInstance(RPCContext context, Class clazz, InstanceProxyHelper.Args args) throws ReflectionException, NoSuchMethodException {
+        Constructor constructor = clazz.getConstructor(args.getArgTypesArray(1));
         Object newInstance;
         try {
-            newInstance = constructor.newInstance(reflectionArgs.getArgsArray());
+            newInstance = constructor.newInstance(args.getArgsArray(1));
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             return RPCMessage.makeFailResult("Create new instance failed. "+e.getMessage());
         }

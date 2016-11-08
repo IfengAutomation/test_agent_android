@@ -53,10 +53,10 @@ public class GetView extends RPCMethod {
             text = ((TextView) view).getText().toString();
         }
         entity.put("text", text + "");
-        entity.put("resource-id", packageName + ":id/" + request.getArgs().get(0));
-        entity.put("class", className);
-        entity.put("package", packageName);
-        entity.put("content-desc", contentDescription);
+        entity.put("resource_id", packageName + ":id/" + request.getArgs().get(0));
+        entity.put("class_name", className);
+        entity.put("package_name", packageName);
+        entity.put("content_desc", contentDescription);
 
         return RPCMessage.makeSuccessResult(entity);
     }
