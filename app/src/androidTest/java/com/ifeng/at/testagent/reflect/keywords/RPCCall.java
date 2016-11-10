@@ -33,7 +33,7 @@ public class RPCCall implements RPCKeyword {
         try {
             reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, args);
         } catch (ReflectionException e) {
-            return RPCMessage.makeFailResult("RPC Call failed. "+e.getMessage());
+            return RPCMessage.makeFailResult("RPC Call failed. "+RPCMessage.getTrace(e));
         }
 
         Object remoteInstance = reflectionArgs.getArgs().get(0);
@@ -46,14 +46,15 @@ public class RPCCall implements RPCKeyword {
         try {
             method = remoteInstance.getClass().getMethod(((String) methodName), reflectionArgs.getArgTypesArray(2));
         } catch (NoSuchMethodException e) {
-            return RPCMessage.makeFailResult("RPC Call failed. "+e.getMessage());
+            return RPCMessage.makeFailResult("RPC Call failed. "+RPCMessage.getTrace(e));
         }
 
         Object result;
         try {
             result = method.invoke(remoteInstance, reflectionArgs.getArgsArray(2));
         } catch (IllegalAccessException | InvocationTargetException e) {
-            return RPCMessage.makeFailResult("RPC Call failed." + e.getMessage());
+
+            return RPCMessage.makeFailResult("RPC Call failed." + RPCMessage.getTrace(e));
         }
 
         if(result!=null){

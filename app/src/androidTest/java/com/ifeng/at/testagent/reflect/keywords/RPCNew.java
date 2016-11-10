@@ -33,7 +33,7 @@ public class RPCNew implements RPCKeyword {
         try {
             reflectionArgs = InstanceProxyHelper.getArgsFromRPCMessage(context, message.getArgs());
         } catch (ReflectionException e) {
-            return RPCMessage.makeFailResult("RPC new failed."+e.getMessage());
+            return RPCMessage.makeFailResult("RPC new failed."+RPCMessage.getTrace(e));
         }
 
         Object clazz = reflectionArgs.getArgs().get(0);
@@ -46,13 +46,13 @@ public class RPCNew implements RPCKeyword {
             try {
                 response = newInstance(context, (Class) clazz, reflectionArgs);
             } catch (NoSuchMethodException | ReflectionException e) {
-                response = RPCMessage.makeFailResult("Create new instance failed. "+e.getMessage());
+                response = RPCMessage.makeFailResult("Create new instance failed. "+RPCMessage.getTrace(e));
             }
         }else{
             try {
                 response = newInstance(context, (Class) clazz);
             }catch (InstantiationException | IllegalAccessException e) {
-                response = RPCMessage.makeFailResult("Create nwe instance failed. " + e.getMessage());
+                response = RPCMessage.makeFailResult("Create nwe instance failed. " + RPCMessage.getTrace(e));
             }
         }
         return response;
@@ -70,7 +70,7 @@ public class RPCNew implements RPCKeyword {
         try {
             newInstance = constructor.newInstance(args.getArgsArray(1));
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            return RPCMessage.makeFailResult("Create new instance failed. "+e.getMessage());
+            return RPCMessage.makeFailResult("Create new instance failed. "+RPCMessage.getTrace(e));
         }
 
         context.getVars().put(newInstance.hashCode(), newInstance);

@@ -5,7 +5,6 @@ import android.widget.TextView;
 
 import com.ifeng.at.testagent.reflect.exceptions.ReflectionException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,12 +57,21 @@ public class InstanceProxyHelper {
                 reflectionArgs.getArgTypes().add(String.class);
                 reflectionArgs.getArgs().add(value);
             }else if(ArgumentType.OBJECT.equals(type)){
-                int hash = Integer.parseInt(value);
+                int splitIndex = value.indexOf(":");
+                String hashStr = value.substring(0, splitIndex);
+                String className = value.substring(splitIndex+1);
+                Class clazz;
+                try {
+                    clazz = Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    throw new ReflectionException("Argument class not found", e);
+                }
+                int hash = Integer.parseInt(hashStr);
                 if(!context.getVars().containsKey(hash)){
                     throw new ReflectionException("Argument remote object not found");
                 }
                 Object var = context.getVars().get(hash);
-                reflectionArgs.getArgTypes().add(var.getClass());
+                reflectionArgs.getArgTypes().add(clazz);
                 reflectionArgs.getArgs().add(var);
             }else{
                 throw new ReflectionException("Unknown arguments type");

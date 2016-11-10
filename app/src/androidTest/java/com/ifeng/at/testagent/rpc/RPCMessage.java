@@ -2,6 +2,8 @@ package com.ifeng.at.testagent.rpc;
 
 import com.google.gson.Gson;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +57,15 @@ public class RPCMessage {
             msg.getArgs().add(errMsg);
         }
         return msg;
+    }
+
+    public static String getTrace(Throwable e){
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        e.printStackTrace(pw);
+        String trace = sw.toString();
+        pw.close();
+        return trace;
     }
 
     public String toJson(){
