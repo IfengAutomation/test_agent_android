@@ -28,7 +28,12 @@ public class InstanceProxyHelper {
             proxyObject.put("resource_id",
                     ((View) instance).getResources().getResourceName(((View) instance).getId()));
             proxyObject.put("package_name",((View) instance).getContext().getPackageName());
-            proxyObject.put("context_desc", ((View) instance).getContentDescription().toString());
+            CharSequence contentDesc = ((View) instance).getContentDescription();
+            if(contentDesc == null){
+                proxyObject.put("content_desc", "");
+            }else{
+                proxyObject.put("content_desc", contentDesc.toString());
+            }
         }
         if(instance instanceof TextView){
             proxyObject.put("text", ((TextView) instance).getText().toString());
