@@ -37,6 +37,7 @@ public class RpcClient {
         writer = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
         registerToServer(deviceId);
         listenToServer();
+        clientSocket.close();
     }
 
     private void registerToServer(String deviceId) throws IOException {
@@ -65,6 +66,14 @@ public class RpcClient {
                 Log.i(TAG, "keyword request :" + requestBuffer.toString());
                 RPCMessage message = RPCMessage.fromJson(decode(requestBuffer.toString()));
                 RPCMessage response;
+                if(message.getMsgType() == RPCMessage.RPC_KILL_SIGNAL){
+                    // receive kill signal
+                    response = RPCMessage.makeKillSignal();
+                    String responseJson = encode(gson.toJson(response)) + "\n";
+                    writer.write(responseJson);
+                    writer.flush();
+                    break;
+                }
                 try {
                     response = handlers.get(message.getVersion()).handle(message);
                     response.setMsgType(RPCMessage.RPCResult);
