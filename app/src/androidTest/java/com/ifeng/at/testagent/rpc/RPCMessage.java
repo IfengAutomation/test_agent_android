@@ -13,6 +13,7 @@ import java.util.List;
 public class RPCMessage {
     public static final int RPCCall = 1;
     public static final int RPCResult = 2;
+    public static final int RPC_KILL_SIGNAL = 99;
 
     private static Gson gson;
 
@@ -56,6 +57,14 @@ public class RPCMessage {
         for (Object errMsg : errorMessages) {
             msg.getArgs().add(errMsg);
         }
+        return msg;
+    }
+
+
+    public static RPCMessage makeKillSignal(){
+        RPCMessage msg = new RPCMessage();
+        msg.setName("kill");
+        msg.setMsgType(RPC_KILL_SIGNAL);
         return msg;
     }
 
