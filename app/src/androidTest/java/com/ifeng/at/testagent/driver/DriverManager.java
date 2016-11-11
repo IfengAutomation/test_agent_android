@@ -2,8 +2,10 @@ package com.ifeng.at.testagent.driver;
 
 import android.support.test.InstrumentationRegistry;
 
+import com.ifeng.at.testagent.driver.methodImpl.ChangeVideoState;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
+import com.ifeng.at.testagent.driver.methodImpl.CurrentActivity;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
 import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
 import com.ifeng.at.testagent.driver.methodImpl.FinishActivity;
@@ -54,6 +56,8 @@ public class DriverManager{
         register(new FinishActivity());
         register(new ClickOnView());
         register(new SwitchToTab());
+        register(new CurrentActivity());
+        register(new ChangeVideoState());
     }
 
     private void register(RPCMethod method){
