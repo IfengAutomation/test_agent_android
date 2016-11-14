@@ -25,7 +25,8 @@ public class StartMainActivity extends RPCMethod {
         Context context = instrumentation.getContext();
         Intent intent = context.getPackageManager().getLaunchIntentForPackage((String) request.getArgs().get(0));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);   // Clear out any previous instances
-        context.startActivity(intent);
+
+        InstrumentationRegistry.getInstrumentation().startActivitySync(intent);
 
         return RPCMessage.makeSuccessResult();
     }

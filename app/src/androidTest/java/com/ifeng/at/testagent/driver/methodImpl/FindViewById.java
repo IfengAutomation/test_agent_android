@@ -1,5 +1,8 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.support.test.InstrumentationRegistry;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,9 +16,10 @@ import java.util.Map;
 /**
  * Owner liuru
  */
-public class GetView extends RPCMethod {
-    public GetView() {
-        setArgsNumber(1);
+public class FindViewById extends RPCMethod{
+
+    public FindViewById(){
+        setArgsNumber(2);
     }
 
     @Override
@@ -30,17 +34,23 @@ public class GetView extends RPCMethod {
         String contentDescription;
         String text = "";
 
+        int hash = Integer.parseInt((String) request.getArgs().get(0));
+        View parentView = (View) varCache.get(hash);
+
+        int id = getResId((String) request.getArgs().get(1));
+
         try{
-            view = solo.getView((String)request.getArgs().get(0));
-            code = view.hashCode();
-            resource_id = view.getResources().getResourceName(view.getId());
-            packageName = view.getResources().getResourcePackageName(view.getId());
-            className = view.getClass().getName();
-            contentDescription = view.getContentDescription() + "";
-        } catch (Throwable t){
+            view = parentView.findViewById(id);
+        }catch (Throwable t){
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
             return  response;
         }
+
+        code = view.hashCode();
+        resource_id = view.getResources().getResourceName(view.getId());
+        packageName = view.getResources().getResourcePackageName(view.getId());
+        className = view.getClass().getName();
+        contentDescription = view.getContentDescription() + "";
 
         Map<String, Object> entity = new HashMap<>();
 
@@ -59,8 +69,19 @@ public class GetView extends RPCMethod {
         entity.put("class_name", className);
         entity.put("package_name", packageName);
         entity.put("content_desc", contentDescription);
-
         return RPCMessage.makeSuccessResult(entity);
     }
 
+    /***
+     * 获取resource id
+     * @param idStr
+     * @return
+     */
+    private int getResId(String idStr){
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        Resources resources = targetContext.getResources();
+        int id = resources.getIdentifier(idStr, "id", targetContext.getPackageName());
+
+        return id;
+    }
 }

@@ -8,8 +8,13 @@ import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
 import com.ifeng.at.testagent.driver.methodImpl.CurrentActivity;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
 import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
+import com.ifeng.at.testagent.driver.methodImpl.FindViewById;
 import com.ifeng.at.testagent.driver.methodImpl.FinishActivity;
+import com.ifeng.at.testagent.driver.methodImpl.GetListData;
+import com.ifeng.at.testagent.driver.methodImpl.GetListItem;
 import com.ifeng.at.testagent.driver.methodImpl.GetView;
+import com.ifeng.at.testagent.driver.methodImpl.LoadMore;
+import com.ifeng.at.testagent.driver.methodImpl.RefreshContent;
 import com.ifeng.at.testagent.driver.methodImpl.StartMainActivity;
 import com.ifeng.at.testagent.driver.methodImpl.SwitchToTab;
 import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
@@ -58,6 +63,11 @@ public class DriverManager{
         register(new SwitchToTab());
         register(new CurrentActivity());
         register(new ChangeVideoState());
+        register(new GetListItem());
+        register(new LoadMore());
+        register(new RefreshContent());
+        register(new FindViewById());
+        register(new GetListData());
     }
 
     private void register(RPCMethod method){

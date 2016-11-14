@@ -1,6 +1,8 @@
 package com.ifeng.at.testagent.driver.methodImpl;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ifeng.at.testagent.driver.RPCMethod;
@@ -13,33 +15,44 @@ import java.util.Map;
 /**
  * Owner liuru
  */
-public class GetView extends RPCMethod {
-    public GetView() {
-        setArgsNumber(1);
+public class GetListItem extends RPCMethod {
+
+    public GetListItem(){
+        setArgsNumber(2);
     }
 
     @Override
     public RPCMessage handleRequest(RPCMessage request, Solo solo, Map<Integer, Object> varCache) {
-
+        // 参数：view hashcode, index
         RPCMessage response;
         View view;
         int code;
-        String resource_id;
-        String packageName;
+        String packageName = "";
         String className;
         String contentDescription;
         String text = "";
+        String resourceId = ""; // Layout 没有id
+
+        int hash = Integer.parseInt((String) request.getArgs().get(0));  //获取hashcode
+        ListView listView = (ListView) varCache.get(hash);
+
+        int index = Integer.parseInt((String) request.getArgs().get(1));  //获取在ListView中所处的index
 
         try{
-            view = solo.getView((String)request.getArgs().get(0));
-            code = view.hashCode();
-            resource_id = view.getResources().getResourceName(view.getId());
-            packageName = view.getResources().getResourcePackageName(view.getId());
-            className = view.getClass().getName();
-            contentDescription = view.getContentDescription() + "";
-        } catch (Throwable t){
+            view = listView.getChildAt(index);
+        }catch (Throwable e){
             response = ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
             return  response;
+        }
+        try {
+            code = view.hashCode();
+            // packageName = view.getResources().getResourcePackageName(view.getId());
+            className = view.getClass().getName();
+            contentDescription = view.getContentDescription() + "";
+        }catch (Throwable e){
+            Log.d("RpcClient", e.getMessage());
+            response = RPCMessage.makeFailResult(e.getMessage());
+            return response;
         }
 
         Map<String, Object> entity = new HashMap<>();
@@ -55,12 +68,12 @@ public class GetView extends RPCMethod {
             text = ((TextView) view).getText().toString();
         }
         entity.put("text", text + "");
-        entity.put("resource_id", resource_id);
-        entity.put("class_name", className);
-        entity.put("package_name", packageName);
-        entity.put("content_desc", contentDescription);
+        entity.put("resource-id", resourceId);
+        entity.put("class", className);
+        entity.put("package", packageName);
+        entity.put("content-desc", contentDescription);
 
         return RPCMessage.makeSuccessResult(entity);
-    }
 
+    }
 }
