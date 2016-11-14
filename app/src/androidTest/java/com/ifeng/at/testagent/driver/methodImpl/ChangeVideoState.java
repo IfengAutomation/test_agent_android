@@ -67,7 +67,9 @@ public class ChangeVideoState extends RPCMethod {
             Assert.assertTrue(message, result);
             return RPCMessage.makeSuccessResult();
 
-        } catch (Throwable e) {
+        }catch(AssertionError e){
+            return ErrorResponseHelper.makeAssertionErrorResponse(getClass(),e.getMessage());
+        }catch(Throwable e) {
             return ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }
     }

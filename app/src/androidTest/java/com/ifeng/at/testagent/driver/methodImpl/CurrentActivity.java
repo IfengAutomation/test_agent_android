@@ -43,6 +43,8 @@ public class CurrentActivity extends RPCMethod {
                 Assert.assertEquals("当前非指定播放页",activityName, viewIdOrNameMap.get(contentDesc));
             }
             return RPCMessage.makeSuccessResult();
+        }catch(AssertionError e){
+            return ErrorResponseHelper.makeAssertionErrorResponse(getClass(),e.getMessage());
         } catch (Throwable e) {
             return ErrorResponseHelper.makeViewNotFoundErrorResponse(getClass());
         }
