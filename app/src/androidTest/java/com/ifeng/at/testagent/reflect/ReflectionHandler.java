@@ -4,6 +4,7 @@ import com.ifeng.at.testagent.reflect.keywords.RPCCall;
 import com.ifeng.at.testagent.reflect.keywords.RPCCallStatic;
 import com.ifeng.at.testagent.reflect.keywords.RPCDelete;
 import com.ifeng.at.testagent.reflect.keywords.RPCNew;
+import com.ifeng.at.testagent.reflect.keywords.RPCSet;
 import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.ifeng.at.testagent.rpc.RequestHandler;
 
@@ -24,6 +25,7 @@ public class ReflectionHandler implements RequestHandler{
         addKeyWord(new RPCCallStatic());
         addKeyWord(new RPCNew());
         addKeyWord(new RPCDelete());
+        addKeyWord(new RPCSet());
     }
 
     private void addKeyWord(RPCKeyword keyword) {

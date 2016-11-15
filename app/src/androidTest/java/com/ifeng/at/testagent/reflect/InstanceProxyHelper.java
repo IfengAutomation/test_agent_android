@@ -55,13 +55,20 @@ public class InstanceProxyHelper {
                 } catch (ClassNotFoundException e) {
                     throw new ReflectionException("Argument class not found", e);
                 }
-            }else if(ArgumentType.INT.equals(type)){
-                reflectionArgs.getArgTypes().add(Integer.class);
+            }
+            else if(ArgumentType.INT.equals(type)){
+                reflectionArgs.getArgTypes().add(int.class);
                 reflectionArgs.getArgs().add(Integer.parseInt(value));
-            }else if(ArgumentType.STRING.equals(type)){
+            }
+            else if(ArgumentType.STRING.equals(type)){
                 reflectionArgs.getArgTypes().add(String.class);
                 reflectionArgs.getArgs().add(value);
-            }else if(ArgumentType.OBJECT.equals(type)){
+            }
+            else if(ArgumentType.FLOAT.equals(type)){
+                reflectionArgs.getArgTypes().add(float.class);
+                reflectionArgs.getArgs().add(Float.parseFloat(value));
+            }
+            else if(ArgumentType.OBJECT.equals(type)){
                 int splitIndex = value.indexOf(":");
                 String hashStr = value.substring(0, splitIndex);
                 String className = value.substring(splitIndex+1);
