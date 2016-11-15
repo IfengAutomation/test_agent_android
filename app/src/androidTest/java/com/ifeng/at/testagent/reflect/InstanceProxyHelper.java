@@ -4,9 +4,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ifeng.at.testagent.reflect.exceptions.ReflectionException;
+import com.ifeng.at.testagent.rpc.RPCMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,26 +22,50 @@ public class InstanceProxyHelper {
     private InstanceProxyHelper(){
     }
 
-    public static Map<String, String> getProxyFromInstance(Object instance){
+    public static Object toRemoteObject(Object instance){
+        if(instance instanceof Integer || instance instanceof Float || instance instanceof String){
+            return instance;
+        }
+        else if(instance instanceof Class){
+            Map<String, String> classObject = new HashMap<>();
+            classObject.put("class_name", ((Class)instance).getName());
+            return classObject;
+        }
+        else if(instance instanceof Collection){
+            Object[] results = new Object[((Collection) instance).size()];
+            int count = 0;
+            for(Object item : (Collection)instance){
+                results[count] = obj2Map(item);
+                count ++;
+            }
+            return results;
+        }
+        else {
+            return obj2Map(instance);
+        }
+    }
+
+    private static Map<String, String> obj2Map(Object obj){
         Map<String, String> proxyObject = new HashMap<>();
-        proxyObject.put("hash", ""+instance.hashCode());
-        proxyObject.put("class_name", instance.getClass().getName());
-        if(instance instanceof View){
+        proxyObject.put("hash", "" + obj.hashCode());
+        proxyObject.put("class_name", obj.getClass().getName());
+        if (obj instanceof View) {
             proxyObject.put("resource_id",
-                    ((View) instance).getResources().getResourceName(((View) instance).getId()));
-            proxyObject.put("package_name",((View) instance).getContext().getPackageName());
-            CharSequence contentDesc = ((View) instance).getContentDescription();
-            if(contentDesc == null){
+                    ((View) obj).getResources().getResourceName(((View) obj).getId()));
+            proxyObject.put("package_name", ((View) obj).getContext().getPackageName());
+            CharSequence contentDesc = ((View) obj).getContentDescription();
+            if (contentDesc == null) {
                 proxyObject.put("content_desc", "");
-            }else{
+            } else {
                 proxyObject.put("content_desc", contentDesc.toString());
             }
         }
-        if(instance instanceof TextView){
-            proxyObject.put("text", ((TextView) instance).getText().toString());
+        if (obj instanceof TextView) {
+            proxyObject.put("text", ((TextView) obj).getText().toString());
         }
         return proxyObject;
     }
+
 
     public static Args getArgsFromRPCMessage(RPCContext context, List<Object> args) throws ReflectionException {
         Args reflectionArgs = new Args();

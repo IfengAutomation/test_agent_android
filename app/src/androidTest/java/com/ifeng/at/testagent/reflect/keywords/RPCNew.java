@@ -61,7 +61,7 @@ public class RPCNew implements RPCKeyword {
     private RPCMessage newInstance(RPCContext context, Class clazz) throws IllegalAccessException, InstantiationException {
         Object newInstance = clazz.newInstance();
         context.getVars().put(newInstance.hashCode(), newInstance);
-        return RPCMessage.makeSuccessResult(InstanceProxyHelper.getProxyFromInstance(newInstance));
+        return RPCMessage.makeSuccessResult(InstanceProxyHelper.toRemoteObject(newInstance));
     }
 
     private RPCMessage newInstance(RPCContext context, Class clazz, InstanceProxyHelper.Args args) throws ReflectionException, NoSuchMethodException {
@@ -74,7 +74,7 @@ public class RPCNew implements RPCKeyword {
         }
 
         context.getVars().put(newInstance.hashCode(), newInstance);
-        Map<String, String> remoteObject = InstanceProxyHelper.getProxyFromInstance(newInstance);
+        Map<String, String> remoteObject = InstanceProxyHelper.toRemoteObject(newInstance);
         return RPCMessage.makeSuccessResult(remoteObject);
     }
 }

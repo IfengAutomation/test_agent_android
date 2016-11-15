@@ -61,7 +61,7 @@ public class RPCCallStatic implements RPCKeyword {
 
         if(result!=null){
             context.getVars().put(result.hashCode(), result);
-            return RPCMessage.makeSuccessResult(InstanceProxyHelper.getProxyFromInstance(result));
+            return RPCMessage.makeSuccessResult(InstanceProxyHelper.toRemoteObject(result));
         }else{
             return RPCMessage.makeSuccessResult();
         }
