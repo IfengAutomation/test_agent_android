@@ -23,7 +23,7 @@ public class InstanceProxyHelper {
     }
 
     public static Object toRemoteObject(Object instance){
-        if(instance instanceof Integer || instance instanceof Float || instance instanceof String){
+        if(instance instanceof Integer || instance instanceof Float || instance instanceof String || instance instanceof Boolean){
             return instance;
         }
         else if(instance instanceof Class){

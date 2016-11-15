@@ -11,6 +11,7 @@ public class ArgumentType {
     public static final String CLASS = "03";
     public static final String OBJECT = "04";
     public static final String FLOAT = "05";
+    public static final String BOOL = "06";
 
     private ArgumentType(){
     }
