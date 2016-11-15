@@ -74,7 +74,6 @@ public class RPCNew implements RPCKeyword {
         }
 
         context.getVars().put(newInstance.hashCode(), newInstance);
-        Map<String, String> remoteObject = InstanceProxyHelper.toRemoteObject(newInstance);
-        return RPCMessage.makeSuccessResult(remoteObject);
+        return RPCMessage.makeSuccessResult(InstanceProxyHelper.toRemoteObject(newInstance));
     }
 }
