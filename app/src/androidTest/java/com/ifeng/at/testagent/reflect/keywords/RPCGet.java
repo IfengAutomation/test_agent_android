@@ -55,6 +55,11 @@ public class RPCGet implements RPCKeyword{
             return RPCMessage.makeFailResult("RPC Get failed.", RPCMessage.getTrace(e));
         }
 
-        return RPCMessage.makeSuccessResult(InstanceProxyHelper.toRemoteObject(result));
+        if(result!=null){
+            context.getVars().put(result.hashCode(), result);
+            return RPCMessage.makeSuccessResult(InstanceProxyHelper.toRemoteObject(result));
+        }else{
+            return RPCMessage.makeSuccessResult();
+        }
     }
 }
