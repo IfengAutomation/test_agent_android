@@ -10,9 +10,6 @@ public class ErrorResponseHelper {
 
     private ErrorResponseHelper(){
     }
-    public static RPCMessage makeAssertionErrorResponse(Class<? extends RPCMethod> rpcMethodClass,String errMessage){
-        return RPCMessage.makeFailResult(rpcMethodClass.getSimpleName()+":"+errMessage);
-    }
     public static RPCMessage makeMethodNotRegisterErrorResponse(String methodName){
         return RPCMessage.makeFailResult(methodName+": method not registered.");
     }
@@ -34,4 +31,7 @@ public class ErrorResponseHelper {
         return RPCMessage.makeFailResult(errorMsg);
     }
 
+    public static RPCMessage errorResponse(Class<? extends RPCMethod> rpcMethodClass, String message) {
+        return RPCMessage.makeFailResult(rpcMethodClass.getSimpleName()+":"+message);
+    }
 }

@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import com.ifeng.at.testagent.driver.methodImpl.ChangeVideoState;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnText;
 import com.ifeng.at.testagent.driver.methodImpl.ClickOnView;
-import com.ifeng.at.testagent.driver.methodImpl.CurrentActivity;
 import com.ifeng.at.testagent.driver.methodImpl.EnterText;
 import com.ifeng.at.testagent.driver.methodImpl.ErrorResponseHelper;
 import com.ifeng.at.testagent.driver.methodImpl.FindViewById;
@@ -21,38 +20,39 @@ import com.ifeng.at.testagent.driver.methodImpl.WaitForText;
 import com.ifeng.at.testagent.rpc.RPCMessage;
 import com.robotium.solo.Solo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Owner liuru
- *
  */
-public class DriverManager{
+public class DriverManager {
     private Solo solo;
     private Map<String, RPCMethod> methodMap = new HashMap<>();
     private Map<Integer, Object> varCache = new HashMap<>();
 
-    public DriverManager(){
+    public DriverManager() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation());
         registerMethodMap();
     }
 
-    public RPCMessage soloCall(RPCMessage request){
+    public RPCMessage soloCall(RPCMessage request) {
         RPCMessage response;
         RPCMethod method = methodMap.get(request.getName());   //获取RPCMethod对象
 
         //method为空处理
-        if (method != null){
+        if (method != null) {
             response = method.execute(request, solo, varCache);    //执行method
-        }else{
+        } else {
             response = ErrorResponseHelper.makeMethodNotRegisterErrorResponse(request.getName());
         }
 
         return response;
     }
 
-    private void registerMethodMap(){
+    private void registerMethodMap() {
         register(new ClickOnText());
         register(new EnterText());
         register(new GetView());
@@ -61,7 +61,6 @@ public class DriverManager{
         register(new FinishActivity());
         register(new ClickOnView());
         register(new SwitchToTab());
-        register(new CurrentActivity());
         register(new ChangeVideoState());
         register(new GetListItem());
         register(new LoadMore());
@@ -70,11 +69,11 @@ public class DriverManager{
         register(new GetListData());
     }
 
-    private void register(RPCMethod method){
+    private void register(RPCMethod method) {
         methodMap.put(method.getClass().getSimpleName(), method);
     }
 
-    private void register(String methodName, RPCMethod method){
+    private void register(String methodName, RPCMethod method) {
         methodMap.put(methodName, method);
     }
 }
