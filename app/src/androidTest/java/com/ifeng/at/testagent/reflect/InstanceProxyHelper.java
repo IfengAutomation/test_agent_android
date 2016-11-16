@@ -50,8 +50,10 @@ public class InstanceProxyHelper {
         proxyObject.put("hash", "" + obj.hashCode());
         proxyObject.put("class_name", obj.getClass().getName());
         if (obj instanceof View) {
-            proxyObject.put("resource_id",
-                    ((View) obj).getResources().getResourceName(((View) obj).getId()));
+            if(((View) obj).getId() != -1){
+                proxyObject.put("resource_id",
+                        ((View) obj).getResources().getResourceName(((View) obj).getId()));
+            }
             proxyObject.put("package_name", ((View) obj).getContext().getPackageName());
             CharSequence contentDesc = ((View) obj).getContentDescription();
             if (contentDesc == null) {
