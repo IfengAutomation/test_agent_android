@@ -24,16 +24,16 @@ public class DataInterfaceHelper {
         field.setAccessible(true);
         String value = (String) field.get(instance);
         if(value.startsWith(HTTP_VCIS_IFENG_COM)){
-            value = value.replaceFirst(HTTP_VCIS_IFENG_COM, "http://"+host);
+            value = value.replaceFirst(HTTP_VCIS_IFENG_COM, "http://"+host+"/vcis.ifeng.com/");
             field.set(instance, value);
         }else if(value.startsWith(HTTP_VCSP_IFENG_COM)){
-            value = value.replaceFirst(HTTP_VCSP_IFENG_COM, "http://"+host);
+            value = value.replaceFirst(HTTP_VCSP_IFENG_COM, "http://"+host+"/vcsp.ifeng.com/");
             field.set(instance, value);
         }else if(value.startsWith(HTTP_V_IFENG_COM)){
-            value = value.replaceFirst(HTTP_V_IFENG_COM, "http://"+host);
+            value = value.replaceFirst(HTTP_V_IFENG_COM, "http://"+host+"/v.ifeng.com/");
             field.set(instance, value);
         }else if(value.startsWith(HTTP_COMMENT_IFENG_COM)){
-            value = value.replaceFirst(HTTP_COMMENT_IFENG_COM, "http://"+host);
+            value = value.replaceFirst(HTTP_COMMENT_IFENG_COM, "http://"+host+"/comment.ifeng.com/");
             field.set(instance, value);
         }
     }
