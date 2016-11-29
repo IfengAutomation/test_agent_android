@@ -4105,8 +4105,8 @@ public class Solo {
 		int[] location = new int[2];
 		listView.getLocationOnScreen(location);
 		float dragX = location[0] + listView.getWidth()/2f;
-		float dragStartY = (location[1] + h) * 0.9f;
-		float dragStopY = location[1];
+		float dragStartY = location[1] + h*0.9f;
+		float dragStopY = location[1] + h*0.1f;
 
 		scrollListToTop(listView);
 
@@ -4120,7 +4120,7 @@ public class Solo {
 				if(lastVisiblePosition >= listCount - 1){
 					return false;
 				}else{
-					drag(dragX, dragX, dragStartY, dragStopY, 30);
+					drag(dragX, dragX, dragStartY, dragStopY, 50);
 					sleeper.sleep();
 				}
 			}
