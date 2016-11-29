@@ -4094,5 +4094,36 @@ public class Solo {
 		return null;
 	}
 
+	/**
+	 * Scroll list one screen by one. Not scroll line by line
+	 * @param listView
+	 * @param text
+     * @return
+     */
+	public boolean waitTextInList(AbsListView listView, String text){
+		int h = listView.getHeight();
+		int[] location = new int[2];
+		listView.getLocationOnScreen(location);
+		float dragX = location[0] + listView.getWidth()/2f;
+		float dragStartY = (location[1] + h) * 0.9f;
+		float dragStopY = location[1];
+
+		scrollListToTop(listView);
+
+		while (true) {
+			if(waitForText(text, 0, 500, false)){
+				return true;
+			}else{
+				int listCount = listView.getCount();
+				int lastVisiblePosition = listView.getLastVisiblePosition();
+				if(lastVisiblePosition >= listCount - 1){
+					return false;
+				}else{
+					drag(dragX, dragX, dragStartY, dragStopY, 10);
+					sleeper.sleep();
+				}
+			}
+		}
+	}
 
 }
