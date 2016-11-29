@@ -4111,7 +4111,8 @@ public class Solo {
 		scrollListToTop(listView);
 
 		while (true) {
-			if(waitForText(text, 0, 500, false)){
+			TextView textView = waiter.waitForText(text, 0, 0, false, true, false);
+			if(textView != null){
 				return true;
 			}else{
 				int listCount = listView.getCount();
@@ -4119,7 +4120,7 @@ public class Solo {
 				if(lastVisiblePosition >= listCount - 1){
 					return false;
 				}else{
-					drag(dragX, dragX, dragStartY, dragStopY, 10);
+					drag(dragX, dragX, dragStartY, dragStopY, 30);
 					sleeper.sleep();
 				}
 			}
