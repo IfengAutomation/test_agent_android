@@ -11,6 +11,7 @@ public class DataInterfaceHelper {
     private static String HTTPS_ID_IFENG_COM = "https://id.ifeng.com";
     private static String VIDEO_AD_CONFIG_URL = "http://c0.ifengimg.com";
     private static String HTTP_EXP_3G_IFENG_COM = "http://exp.3g.ifeng.com";
+    private static String HTTP_API_NEWAD = "http://api.newad.ifeng.com";
 
     public static void setHost(String host) throws ClassNotFoundException, IllegalAccessException {
         String className = "com.ifeng.video.dao.db.constants.DataInterface";
@@ -46,6 +47,9 @@ public class DataInterfaceHelper {
             field.set(instance, value);
         }else if(value.startsWith(HTTP_EXP_3G_IFENG_COM)){
             value = value.replaceFirst(HTTP_EXP_3G_IFENG_COM, "http://"+host+"/exp.3g.ifeng.com");
+            field.set(instance, value);
+        }else if(value.startsWith(HTTP_API_NEWAD)){
+            value = value.replaceFirst(HTTP_API_NEWAD, "http://"+host+"//api.newad.ifeng.com");
             field.set(instance, value);
         }
     }
