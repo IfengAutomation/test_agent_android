@@ -4127,4 +4127,20 @@ public class Solo {
 		}
 	}
 
+	public void performClickOnView(View view) {
+		if(config.commandLogging){
+			Log.d(config.commandLoggingTag, "performClickOnView("+view+")");
+		}
+
+		view = waiter.waitForView(view, Timeout.getSmallTimeout());
+		final View finalView = view;
+		instrumentation.runOnMainSync(new Runnable() {
+			@Override
+			public void run() {
+				finalView.performClick();
+
+			}
+		});
+	}
+
 }
