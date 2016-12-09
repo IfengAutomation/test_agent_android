@@ -1446,15 +1446,7 @@ public class Solo {
 		}
 		
 		view = waiter.waitForView(view, Timeout.getSmallTimeout());
-        final View finalView = view;
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                finalView.performClick();
-
-            }
-        });
-//		clicker.clickOnScreen(view);
+		clicker.clickOnScreen(view);
 	}
 
 	/**
